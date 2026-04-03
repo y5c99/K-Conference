@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Submission - K-Conference</title>
+        <link rel="stylesheet" href="../CSS/author_dashboard.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <h2 style="color: var(--primary-purple); font-size: 18px; margin: 0 24px;">K-Conference</h2>
+            <p style="color: var(--text-muted); font-size: 14px; margin: 4px 24px 0;">ISCE 2026</p>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="Author_dashboard.html" class="nav-item"><i class="ph ph-squares-four"></i> Dashboard</a>
+            <a href="Author_mysubmission.html" class="nav-item active"><i class="ph ph-file-text"></i> My Submissions</a>
+            <a href="#" class="nav-item"><i class="ph ph-chat-circle"></i> Messages</a>
+            <a href="#" class="nav-item"><i class="ph ph-calendar-blank"></i> Schedule</a>
+            <a href="#" class="nav-item"><i class="ph ph-clipboard-text"></i> Feedback</a>
+            <a href="#" class="nav-item logout" style="margin-top: 20px;"><i class="ph ph-sign-out"></i> Logout</a>
+        </nav>
+        
+        <div class="user-profile">
+            <div class="avatar">JD</div>
+            <div class="user-info">
+                <h4>Jane Doe</h4>
+                <p>Author</p>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <button class="notification-btn"><i class="ph ph-bell"></i></button>
+        </header>
+
+        <div class="content-wrapper form-view">
+            
+            <a href="Author_mysubmission.html" class="back-link"><i class="ph ph-arrow-left"></i> Back to Submissions</a>
+
+            <div class="page-title">
+                <h1>New Submission</h1>
+                <p>Submit a paper to International Society Conference Event 2026</p>
+            </div>
+
+            <div class="alert-banner default">
+                <i class="ph ph-info"></i>
+                <div>
+                    <span style="font-size: 12px; color: var(--text-muted);">Submission Deadline</span>
+                    <strong style="font-size: 14px; display: block; margin: 4px 0;">March 20, 2026</strong>
+                    <p style="color: var(--text-muted);">You can save drafts and submit later before the deadline.</p>
+                </div>
+            </div>
+
+            <div class="panel form-panel">
+                <div class="form-header">
+                    <h3>Paper Details</h3>
+                    <p>Provide information about your paper</p>
+                </div>
+
+                <form id="submissionForm">
+                    <div class="form-group">
+                        <label for="paperTitle">Title <span>*</span></label>
+                        <input type="text" id="paperTitle" placeholder="Enter your paper title" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="paperAbstract">Abstract <span>*</span></label>
+                        <textarea id="paperAbstract" rows="6" placeholder="Enter paper abstract (max 300 words)" required></textarea>
+                        <div class="word-count" id="wordCountDisplay">0/300 words</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="subType">Submission Type <span>*</span></label>
+                        <div class="select-wrapper">
+                            <select id="subType" required>
+                                <option value="" disabled selected>Select a track</option>
+                                <option value="full">Full Paper</option>
+                                <option value="short">Short Paper</option>
+                                <option value="poster">Poster</option>
+                            </select>
+                            <i class="ph ph-caret-down"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="paperTrack">Track <span>*</span></label>
+                        <div class="select-wrapper">
+                            <select id="paperTrack" required>
+                                <option value="" disabled selected>Select a track</option>
+                                <option value="security">Security & Privacy</option>
+                                <option value="hci">Human-Computer Interaction</option>
+                                <option value="networks">Networks</option>
+                            </select>
+                            <i class="ph ph-caret-down"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="keywordInput">Keywords</label>
+                        <div class="keyword-input-wrapper">
+                            <input type="text" id="keywordInput" placeholder="Type a keyword and press Enter">
+                            <button type="button" class="btn-icon" id="addKeywordBtn"><i class="ph ph-plus"></i></button>
+                        </div>
+                        <div class="tags-container" id="tagsContainer">
+                            <span class="tag">Privacy <i class="ph ph-x remove-tag"></i></span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn-outline">Save Draft</button>
+                <button type="button" class="btn-primary" style="padding: 10px 32px;">Next</button>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        // Word Counter Logic
+        const textarea = document.getElementById('paperAbstract');
+        const wordCountDisplay = document.getElementById('wordCountDisplay');
+
+        textarea.addEventListener('input', function() {
+            let words = this.value.trim().split(/\s+/).filter(word => word.length > 0);
+            let count = words.length;
+            wordCountDisplay.textContent = `${count}/300 words`;
+            
+            if (count > 300) {
+                wordCountDisplay.style.color = '#ef4444'; // Turn red if over limit
+            } else {
+                wordCountDisplay.style.color = '#9ca3af';
+            }
+        });
+
+        // Keyword Tag Logic
+        const keywordInput = document.getElementById('keywordInput');
+        const addKeywordBtn = document.getElementById('addKeywordBtn');
+        const tagsContainer = document.getElementById('tagsContainer');
+
+        function addTag() {
+            const val = keywordInput.value.trim();
+            if (val !== '') {
+                const tag = document.createElement('span');
+                tag.className = 'tag';
+                tag.innerHTML = `${val} <i class="ph ph-x remove-tag"></i>`;
+                
+                // Add remove functionality to the new 'x' icon
+                tag.querySelector('.remove-tag').addEventListener('click', function() {
+                    tag.remove();
+                });
+
+                tagsContainer.appendChild(tag);
+                keywordInput.value = ''; // Clear input
+            }
+        }
+
+        // Add tag on button click or Enter key
+        addKeywordBtn.addEventListener('click', addTag);
+        keywordInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault(); // Prevent form submission
+                addTag();
+            }
+        });
+
+        // Make the initial hardcoded 'Privacy' tag removable too
+        document.querySelectorAll('.remove-tag').forEach(btn => {
+            btn.addEventListener('click', function() {
+                this.parentElement.remove();
+            });
+        });
+    </script>
+</body>
+</html>

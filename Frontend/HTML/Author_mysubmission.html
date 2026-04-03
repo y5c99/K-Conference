@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Submissions</title>
+    <link rel="stylesheet" href="../CSS/author_dashboard.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <nav class="sidebar-nav">
+            <a href="Author_dashboard.html" class="nav-item"><i class="ph ph-squares-four"></i> Dashboard</a>
+            <a href="Author_mysubmission.html" class="nav-item active"><i class="ph ph-file-text"></i> My Submissions</a>
+            <a href="#" class="nav-item"><i class="ph ph-chat-circle"></i> Messages</a>
+            <a href="#" class="nav-item"><i class="ph ph-calendar-blank"></i> Schedule</a>
+            <a href="#" class="nav-item"><i class="ph ph-clipboard-text"></i> Feedback</a>
+            <a href="#" class="nav-item logout" style="margin-top: 20px;"><i class="ph ph-sign-out"></i> Logout</a>
+        </nav>
+        
+        <div class="user-profile">
+            <div class="avatar">JD</div>
+            <div class="user-info">
+                <h4>Jane Doe</h4>
+                <p>Author</p>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <button class="notification-btn"><i class="ph ph-bell"></i></button>
+        </header>
+
+        <div class="content-wrapper">
+            <div class="flex-between">
+                <div class="page-title">
+                    <h1>My Submissions</h1>
+                    <p>Manage your paper submissions for International Society Conference Event 2026</p>
+                </div>
+                <a href="Author_newsubmission.html" class="btn-primary">New Submission</a>
+            </div>
+
+            <div class="submission-cards">
+                
+                <div class="sub-card">
+                    <div class="sub-card-header">
+                        <h3>Privacy-preserving ML in healthcare</h3>
+                        <span class="badge accepted">Accepted</span>
+                    </div>
+                    <div class="sub-card-details">
+                        <p>Track: Security & Privacy</p>
+                        <p>ID: SUB-2026-0042</p>
+                        <p class="date">Submitted: March 2, 2026</p>
+                    </div>
+                </div>
+
+                <div class="sub-card">
+                    <div class="sub-card-header">
+                        <h3>Adaptive User Interfaces for Diverse Cognitive Abilities</h3>
+                        <span class="badge review">Under Review</span>
+                    </div>
+                    <div class="sub-card-details">
+                        <p>Track: Human-Computer Interaction</p>
+                        <p>ID: SUB-2026-0027</p>
+                        <p class="date">Submitted: February 12, 2026</p>
+                    </div>
+                </div>
+
+                <div class="sub-card">
+                    <div class="sub-card-header">
+                        <h3>Privacy-preserving ML in healthcare</h3>
+                        <span class="badge rejected">Rejected</span>
+                    </div>
+                    <div class="sub-card-details">
+                        <p>Track: Networks</p>
+                        <p>ID: SUB-2026-0038</p>
+                        <p class="date">Submitted: March 7, 2026</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+</body>
+</html>

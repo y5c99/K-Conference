@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submission Details - K-Conference</title>
+        <link rel="stylesheet" href="../CSS/author_dashboard.css">
+ <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <h2 style="color: var(--primary-purple); font-size: 18px; margin: 0 24px;">K-Conference</h2>
+            <p style="color: var(--text-muted); font-size: 14px; margin: 4px 24px 0;">ISCE 2026</p>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="Author_dashboard.html" class="nav-item"><i class="ph ph-squares-four"></i> Dashboard</a>
+            <a href="Author_mysubmission.html" class="nav-item active"><i class="ph ph-file-text"></i> My Submissions</a>
+            <a href="#" class="nav-item"><i class="ph ph-chat-circle"></i> Messages</a>
+            <a href="#" class="nav-item"><i class="ph ph-calendar-blank"></i> Schedule</a>
+            <a href="#" class="nav-item"><i class="ph ph-clipboard-text"></i> Feedback</a>
+            <a href="#" class="nav-item logout" style="margin-top: 20px;"><i class="ph ph-sign-out"></i> Logout</a>
+        </nav>
+        
+        <div class="user-profile">
+            <div class="avatar">JD</div>
+            <div class="user-info">
+                <h4>Jane Doe</h4>
+                <p>Author</p>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <button class="notification-btn"><i class="ph ph-bell"></i></button>
+        </header>
+
+        <div class="content-wrapper details-view">
+            
+            <a href="Author_mysubmission.html" class="back-link"><i class="ph ph-arrow-left"></i> Back to Submissions</a>
+
+            <div class="page-title">
+                <h1>Submission Details</h1>
+                <p>View your submission details and review status</p>
+            </div>
+
+            <div class="alert-banner warning">
+                <i class="ph ph-clock"></i>
+                <div>
+                    <strong>Review in Progress</strong>
+                    <p>Your submission is currently under review. You will be notified when the review process is complete and a decision is made.</p>
+                </div>
+            </div>
+
+            <div class="panel detail-panel">
+                <div class="panel-header">
+                    <h3>Paper Details</h3>
+                    <span class="badge-locked"><i class="ph ph-lock-key"></i> Locked</span>
+                </div>
+                
+                <div class="detail-row">
+                    <span class="label">Submission ID</span>
+                    <span class="value">SUB-2026-0042</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Paper Title</span>
+                    <span class="value">Privacy-preserving ML in healthcare</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Track</span>
+                    <span class="value">Security and Privacy</span>
+                </div>
+                <div class="detail-row">
+                    <span class="label">Submitted</span>
+                    <span class="value">March 26, 2026 at 10:30</span>
+                </div>
+                <div class="detail-row borderless">
+                    <span class="label">Status</span>
+                    <span class="value"><span class="badge review">Under Review</span></span>
+                </div>
+            </div>
+
+            <div class="panel detail-panel">
+                <div class="panel-header">
+                    <h3>Abstract</h3>
+                </div>
+                <div class="abstract-box">
+                    <p>This paper presents a novel framework for creating adaptive user interfaces that automatically adjust to users with varying cognitive abilities. Our approach uses machine learning to detect user difficulties and modifies interface complexity in real-time.</p>
+                </div>
+            </div>
+
+            <div class="panel detail-panel">
+                <div class="panel-header">
+                    <h3><i class="ph ph-users" style="margin-right: 8px;"></i> Authors</h3>
+                </div>
+                <div class="authors-list">
+                    <div class="author-card">
+                        <h4>Jane Doe</h4>
+                        <p>University of Technology</p>
+                        <a href="mailto:jane.doe@university.edu">jane.doe@university.edu</a>
+                    </div>
+                    <div class="author-card">
+                        <h4>Jane Doe</h4>
+                        <p>University of Technology</p>
+                        <a href="mailto:jane.doe@university.edu">jane.doe@university.edu</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel detail-panel">
+                <div class="panel-header">
+                    <h3>Timeline</h3>
+                </div>
+                
+                <div class="timeline">
+                    <div class="timeline-item completed">
+                        <div class="timeline-marker"><i class="ph ph-check-circle-fill"></i></div>
+                        <div class="timeline-content">
+                            <h4>Paper Submitted</h4>
+                            <span class="date">March 12, 2026</span>
+                            <p>Paper successfully submitted to ISCE 2026</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item completed">
+                        <div class="timeline-marker"><i class="ph ph-check-circle-fill"></i></div>
+                        <div class="timeline-content">
+                            <h4>Assigned to Reviewers</h4>
+                            <span class="date">March 15, 2026</span>
+                            <p>Paper assigned to 3 reviewers for evaluation</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item active">
+                        <div class="timeline-marker"><i class="ph ph-record-fill"></i></div>
+                        <div class="timeline-content">
+                            <h4>Paper under review</h4>
+                            <span class="date">In Progress - Expected March 27, 2026</span>
+                            <p>Paper assigned to reviewers for evaluation</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item pending">
+                        <div class="timeline-marker"><i class="ph ph-circle"></i></div>
+                        <div class="timeline-content">
+                            <h4>Decision</h4>
+                            <span class="date">Pending - Expected by April 04, 2026</span>
+                            <p>Program committee will make final decision</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submission Successful</title>
+    <link rel="stylesheet" href="../CSS/author_dashboard.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <h2 style="color: var(--primary-purple); font-size: 18px; margin: 0 24px;">K-Conference</h2>
+            <p style="color: var(--text-muted); font-size: 14px; margin: 4px 24px 0;">ISCE 2026</p>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item"><i class="ph ph-squares-four"></i> Dashboard</a>
+            <a href="submissions.html" class="nav-item active"><i class="ph ph-file-text"></i> My Submissions</a>
+            <a href="#" class="nav-item"><i class="ph ph-chat-circle"></i> Messages</a>
+            <a href="#" class="nav-item"><i class="ph ph-calendar-blank"></i> Schedule</a>
+            <a href="#" class="nav-item"><i class="ph ph-clipboard-text"></i> Feedback</a>
+            <a href="#" class="nav-item logout" style="margin-top: 20px;"><i class="ph ph-sign-out"></i> Logout</a>
+        </nav>
+        
+        <div class="user-profile">
+            <div class="avatar">JD</div>
+            <div class="user-info">
+                <h4>Jane Doe</h4>
+                <p>Author</p>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <button class="notification-btn"><i class="ph ph-bell"></i></button>
+        </header>
+
+        <div class="content-wrapper success-view">
+            
+            <div class="panel success-panel">
+                <div class="success-icon-wrapper">
+                    <i class="ph ph-check"></i>
+                </div>
+                
+                <h2>Your paper has been successfully submitted to ISCE 2026.<br>You'll receive a confirmation email shortly.</h2>
+
+                <div class="summary-box">
+                    <div class="summary-row">
+                        <span class="s-label">Submission ID</span>
+                        <span class="s-value">SUB-2026-0042</span>
+                    </div>
+                    <div class="summary-row">
+                        <span class="s-label">Paper Title</span>
+                        <span class="s-value">Privacy-preserving ML in healthcare</span>
+                    </div>
+                    <div class="summary-row" style="border-bottom: none;">
+                        <span class="s-label">Track</span>
+                        <span class="s-value">Security and Privacy</span>
+                    </div>
+                </div>
+
+                <div class="success-actions">
+                    <a href="submission_details.html" class="btn-outline" style="text-decoration: none;">View my submission</a>
+                    <a href="dashboard.html" class="btn-primary" style="text-decoration: none;">Back to Dashboard</a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</body>
+</html>

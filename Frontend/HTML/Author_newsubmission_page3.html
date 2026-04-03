@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Submission - Uploads</title>
+    <link rel="stylesheet" href="../CSS/author_dashboard.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <h2 style="color: var(--primary-purple); font-size: 18px; margin: 0 24px;">K-Conference</h2>
+            <p style="color: var(--text-muted); font-size: 14px; margin: 4px 24px 0;">ISCE 2026</p>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item"><i class="ph ph-squares-four"></i> Dashboard</a>
+            <a href="submissions.html" class="nav-item active"><i class="ph ph-file-text"></i> My Submissions</a>
+            <a href="#" class="nav-item"><i class="ph ph-chat-circle"></i> Messages</a>
+            <a href="#" class="nav-item"><i class="ph ph-calendar-blank"></i> Schedule</a>
+            <a href="#" class="nav-item"><i class="ph ph-clipboard-text"></i> Feedback</a>
+            <a href="#" class="nav-item logout" style="margin-top: 20px;"><i class="ph ph-sign-out"></i> Logout</a>
+        </nav>
+        
+        <div class="user-profile">
+            <div class="avatar">JD</div>
+            <div class="user-info">
+                <h4>Jane Doe</h4>
+                <p>Author</p>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="topbar">
+            <button class="notification-btn"><i class="ph ph-bell"></i></button>
+        </header>
+
+        <div class="content-wrapper form-view">
+            
+            <a href="submission_authors.html" class="back-link"><i class="ph ph-arrow-left"></i> Back</a>
+
+            <div class="page-title">
+                <h1>New Submission</h1>
+                <p>Submit a paper to International Society Conference Event 2026</p>
+            </div>
+
+            <div class="panel form-panel">
+                <div class="form-header" style="border-bottom: none; padding-bottom: 0; margin-bottom: 24px;">
+                    <h3>Upload Files</h3>
+                    <p>Your manuscript must be anonymised for double-blind review. Remove all author names and affiliations before uploading.</p>
+                </div>
+
+                <div class="form-group">
+                    <label>Manuscript</label>
+                    <div class="file-drop-zone">
+                        <i class="ph ph-upload-simple"></i>
+                        <h4>Drag and drop files here</h4>
+                        <p>or <a href="#">Browse Files</a></p>
+                        <span class="file-limit">Max 50MB</span>
+                    </div>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 32px;">
+                    <label>Supplementary materials (optional)</label>
+                    <div class="file-drop-zone">
+                        <i class="ph ph-upload-simple"></i>
+                        <h4>Drag and drop files here</h4>
+                        <p>or <a href="#">Browse Files</a></p>
+                        <span class="file-limit">Max 50MB</span>
+                    </div>
+                </div>
+
+                <button type="button" class="btn-full-grey"><i class="ph ph-plus"></i> Add Author</button>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn-outline">Save Draft</button>
+                <a href="submission_success.html" class="btn-primary" style="padding: 10px 32px; text-decoration: none;">Submit Paper</a>
+            </div>
+
+        </div>
+    </main>
+</body>
+</html>
