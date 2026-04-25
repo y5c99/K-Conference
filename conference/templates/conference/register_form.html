@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Register — {{ conference.name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <h1>Register for {{ conference.name }}</h1>
+    <p class="muted">{{ conference.start_date|date:"M j" }} – {{ conference.end_date|date:"M j, Y" }}</p>
+</section>
+
+<form method="post" class="big-form panel">
+    {% csrf_token %}
+    {% for field in form %}
+        <div class="form-row">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}<small class="muted">{{ field.help_text }}</small>{% endif %}
+        </div>
+    {% endfor %}
+
+    <div class="form-actions">
+        <button type="submit" class="btn-primary">Confirm Registration</button>
+        <a href="{% url 'conference:detail' conference.pk %}" class="btn-secondary">Cancel</a>
+    </div>
+</form>
+{% endblock %}

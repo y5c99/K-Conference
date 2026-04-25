@@ -1,0 +1,12 @@
+<a href="{% url 'accounts:dashboard' %}" class="side-link {% if active == 'dashboard' %}active{% endif %}">
+    <span class="side-icon">▦</span> Dashboard
+</a>
+<a href="{% url 'conference:mine' %}" class="side-link {% if active == 'conferences' %}active{% endif %}">
+    <span class="side-icon">📅</span> My Conferences
+</a>
+<a href="{% url 'conference:create' %}" class="side-link {% if active == 'new_conference' %}active{% endif %}">
+    <span class="side-icon">＋</span> New Conference
+</a>
+<a href="{% url 'accounts:logout' %}" class="side-link logout">
+    <span class="side-icon">⎋</span> Logout
+</a>

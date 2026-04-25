@@ -1,0 +1,36 @@
+{% extends 'app_base.html' %}
+
+{% block title %}My Conferences — K-Conference{% endblock %}
+{% block topbar_title %}My Conferences{% endblock %}
+
+{% block sidebar_nav %}
+    {% include 'partials/sidebar_organiser.html' with active='conferences' %}
+{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <h1>My Conferences</h1>
+    <a href="{% url 'conference:create' %}" class="btn-primary inline">＋ New Conference</a>
+</section>
+
+{% if conferences %}
+    <ul class="list panel">
+    {% for c in conferences %}
+        <li>
+            <a href="{% url 'conference:detail' c.pk %}"><strong>{{ c.name }}</strong></a>
+            <span class="muted small">
+                {{ c.start_date|date:"M j" }} – {{ c.end_date|date:"M j, Y" }}
+                &middot; {{ c.location|default:"Online" }}
+            </span>
+            <span class="badge badge-{{ c.status }}">{{ c.get_status_display }}</span>
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <div class="empty-card">
+        <h2>No conferences yet</h2>
+        <p>Create your first one.</p>
+        <a href="{% url 'conference:create' %}" class="btn-primary inline">＋ Create Conference</a>
+    </div>
+{% endif %}
+{% endblock %}

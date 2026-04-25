@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete {{ conference.name }}{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <h1>Delete Conference</h1>
+    <p>Are you sure you want to permanently delete <strong>{{ conference.name }}</strong>?
+       This will also remove all tracks, sessions, and registrations.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button class="btn-danger" type="submit">Yes, delete</button>
+        <a href="{% url 'conference:detail' conference.pk %}" class="btn-secondary">Cancel</a>
+    </form>
+</section>
+{% endblock %}

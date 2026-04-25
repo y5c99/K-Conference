@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ conference.name }} — K-Conference{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <div>
+        <h1>{{ conference.name }}</h1>
+        <p class="muted">
+            {{ conference.start_date|date:"M j" }} – {{ conference.end_date|date:"M j, Y" }}
+            &middot; {{ conference.location|default:"Online" }}
+            &middot; {{ conference.get_mode_display }}
+        </p>
+        <span class="badge badge-{{ conference.status }}">{{ conference.get_status_display }}</span>
+    </div>
+    {% if user == conference.organiser or user.is_staff %}
+    <div class="page-actions">
+        <a href="{% url 'submissions:organiser_list' conference.pk %}" class="btn-secondary">Submissions</a>
+        <a href="{% url 'conference:edit' conference.pk %}" class="btn-secondary">Edit</a>
+        <a href="{% url 'conference:delete' conference.pk %}" class="btn-danger">Delete</a>
+    </div>
+{% endif %}
+</section>
+
+{% if conference.description %}
+    <section class="panel"><p>{{ conference.description|linebreaksbr }}</p></section>
+{% endif %}
+
+<div class="row-2">
+    <section class="panel">
+        <div class="panel-head">
+            <h3>Tracks</h3>
+            {% if user == conference.organiser %}
+                <a href="{% url 'conference:track_create' conference.pk %}" class="link-mini">＋ Add</a>
+            {% endif %}
+        </div>
+        {% if tracks %}
+            <ul class="list">
+            {% for t in tracks %}
+                <li>
+                    <strong>{{ t.name }}</strong>
+                    {% if t.description %}<span class="muted small">— {{ t.description }}</span>{% endif %}
+                    {% if user == conference.organiser %}
+                        <a href="{% url 'conference:track_delete' t.pk %}" class="link-mini danger">Remove</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p class="muted small">No tracks yet.</p>
+        {% endif %}
+    </section>
+
+    <section class="panel">
+        <div class="panel-head">
+            <h3>Programme</h3>
+            {% if user == conference.organiser %}
+                <a href="{% url 'conference:session_create' conference.pk %}" class="link-mini">＋ Add Session</a>
+            {% endif %}
+        </div>
+        {% if sessions %}
+            <ul class="list">
+            {% for s in sessions %}
+                <li>
+                    <strong>{{ s.title }}</strong>
+                    <span class="muted small">
+                        {{ s.starts_at|date:"D, M j H:i" }} – {{ s.ends_at|date:"H:i" }}
+                        {% if s.track %} · {{ s.track.name }}{% endif %}
+                    </span>
+                    {% if user == conference.organiser %}
+                        <a href="{% url 'conference:session_delete' s.pk %}" class="link-mini danger">Remove</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p class="muted small">No sessions scheduled yet.</p>
+        {% endif %}
+    </section>
+</div>
+
+<section class="panel">
+    <h3>Registration</h3>
+    {% if user.is_authenticated %}
+        {% if is_registered %}
+            <p class="success">✓ You are registered for this conference.</p>
+            <form method="post" action="{% url 'conference:unregister' conference.pk %}" class="inline-form">
+                {% csrf_token %}
+                <button class="btn-secondary" type="submit">Unregister</button>
+            </form>
+        {% elif conference.is_open_for_registration %}
+            <a href="{% url 'conference:register' conference.pk %}" class="btn-primary inline">Register Now</a>
+        {% else %}
+            <p class="muted">Registration is not currently open.</p>
+        {% endif %}
+    {% else %}
+        <p>Please <a href="{% url 'accounts:login' %}">log in</a> to register.</p>
+    {% endif %}
+</section>
+{% endblock %}

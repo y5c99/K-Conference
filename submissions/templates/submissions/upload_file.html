@@ -1,0 +1,50 @@
+{% extends 'app_base.html' %}
+
+{% block title %}Upload Manuscript — K-Conference{% endblock %}
+{% block topbar_title %}Author Dashboard{% endblock %}
+
+{% block sidebar_nav %}
+    {% include 'partials/sidebar_author.html' with active='submissions' %}
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'submissions:detail' submission.pk %}" class="back-link">← Back to Submission</a>
+
+<section class="page-head" style="margin-top: 0.5rem;">
+    <div>
+        <h1>Upload Manuscript</h1>
+        <p class="muted">{{ submission.title }} — {{ submission.submission_id_code }}</p>
+    </div>
+</section>
+
+<form method="post" enctype="multipart/form-data" class="big-form panel">
+    {% csrf_token %}
+
+    <div class="form-row">
+        <label for="{{ form.file.id_for_label }}">{{ form.file.label }}</label>
+        {{ form.file }}
+        <div class="muted small">{{ form.file.help_text }}</div>
+        {% if form.file.errors %}<div class="field-error">{{ form.file.errors.0 }}</div>{% endif %}
+    </div>
+
+    {% if submission.files.exists %}
+    <div class="info-callout">
+        <span class="info-icon">📄</span>
+        <div>
+            <strong>Existing files</strong>
+            <ul class="list" style="margin-top: 0.5rem;">
+            {% for f in submission.files.all %}
+                <li>v{{ f.version }} — {{ f.filename }} ({{ f.uploaded_at|date:"M j, Y" }})</li>
+            {% endfor %}
+            </ul>
+            <span class="muted small">A new upload will become version {{ submission.files.count|add:1 }}.</span>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="form-actions">
+        <a href="{% url 'submissions:detail' submission.pk %}" class="btn-secondary">Cancel</a>
+        <button type="submit" class="btn-primary inline">Upload</button>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,9 @@
+<a href="{% url 'accounts:dashboard' %}" class="side-link {% if active == 'dashboard' %}active{% endif %}">
+    <span class="side-icon">▦</span> Dashboard
+</a>
+<a href="#" class="side-link {% if active == 'assigned' %}active{% endif %}">
+    <span class="side-icon">📄</span> Assigned Papers
+</a>
+<a href="{% url 'accounts:logout' %}" class="side-link logout">
+    <span class="side-icon">⎋</span> Logout
+</a>

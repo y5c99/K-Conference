@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}K-Conference{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body class="app-shell">
+
+    {# Sidebar (left) #}
+    <aside class="sidebar">
+        <div class="sidebar-brand">
+            <div class="brand-name">K-Conference</div>
+            <div class="brand-sub">ISCE 2026</div>
+        </div>
+
+        <nav class="sidebar-nav">
+            {% block sidebar_nav %}{% endblock %}
+        </nav>
+
+        <div class="sidebar-user">
+            <div class="avatar">
+                {{ user.first_name|first|upper }}{{ user.last_name|first|upper }}
+            </div>
+            <div class="sidebar-user-info">
+                <div class="sidebar-user-name">
+                    {{ user.first_name }} {{ user.last_name }}
+                </div>
+                <div class="sidebar-user-role">
+                    {{ user.profile.get_role_display }}
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    {# Main area (right) #}
+    <div class="app-main">
+        <header class="app-topbar">
+            <div class="topbar-title">{% block topbar_title %}Dashboard{% endblock %}</div>
+            <div class="topbar-actions">
+                <span class="bell" title="Notifications">🔔</span>
+            </div>
+        </header>
+
+        {% if messages %}
+            <div class="messages app-messages">
+                {% for message in messages %}
+                    <div class="message message-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <main class="app-content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <script src="{% static 'js/auth.js' %}"></script>
+</body>
+</html>

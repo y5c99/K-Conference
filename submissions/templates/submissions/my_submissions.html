@@ -1,0 +1,40 @@
+{% extends 'app_base.html' %}
+
+{% block title %}My Submissions — K-Conference{% endblock %}
+{% block topbar_title %}My submissions{% endblock %}
+
+{% block sidebar_nav %}
+    {% include 'partials/sidebar_author.html' with active='submissions' %}
+{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <div>
+        <h1>My Submissions</h1>
+        <p class="muted">Manage your paper submissions for International Society Conference Event 2026</p>
+    </div>
+    <a href="{% url 'submissions:create' %}" class="btn-primary inline">＋ New Submission</a>
+</section>
+
+{% if submissions %}
+    <div class="submission-list">
+        {% for s in submissions %}
+        <a href="{% url 'submissions:detail' s.pk %}" class="submission-card">
+            <div class="submission-card-main">
+                <h3>{{ s.title }}</h3>
+                <p class="muted small">Track: {{ s.track.name|default:"—" }}</p>
+                <p class="muted small">ID: {{ s.submission_id_code|default:"—" }}</p>
+                <p class="muted small">Submitted: {{ s.submitted_at|date:"F j, Y"|default:"Not yet submitted" }}</p>
+            </div>
+            <span class="status-pill status-{{ s.status }}">{{ s.get_status_display }}</span>
+        </a>
+        {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-card">
+        <h2>No submissions yet</h2>
+        <p>Get started by submitting your first paper.</p>
+        <a href="{% url 'submissions:create' %}" class="btn-primary inline">＋ New Submission</a>
+    </div>
+{% endif %}
+{% endblock %}

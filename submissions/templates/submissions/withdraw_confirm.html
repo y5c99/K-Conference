@@ -1,0 +1,18 @@
+{% extends 'app_base.html' %}
+{% block topbar_title %}Withdraw Submission{% endblock %}
+
+{% block sidebar_nav %}
+    {% include 'partials/sidebar_author.html' with active='submissions' %}
+{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <h1>Withdraw "{{ submission.title }}"?</h1>
+    <p>This action cannot be undone. Your submission will be marked as withdrawn and excluded from review.</p>
+    <form method="post">
+        {% csrf_token %}
+        <button class="btn-danger" type="submit">Yes, withdraw</button>
+        <a href="{% url 'submissions:detail' submission.pk %}" class="btn-secondary">Cancel</a>
+    </form>
+</section>
+{% endblock %}

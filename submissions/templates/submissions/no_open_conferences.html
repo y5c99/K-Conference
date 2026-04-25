@@ -1,0 +1,14 @@
+{% extends 'app_base.html' %}
+{% block topbar_title %}New Submission{% endblock %}
+
+{% block sidebar_nav %}
+    {% include 'partials/sidebar_author.html' with active='submissions' %}
+{% endblock %}
+
+{% block content %}
+<div class="empty-card">
+    <h2>No conferences are currently accepting submissions</h2>
+    <p>Check back later, or contact an organiser for more information.</p>
+    <a href="{% url 'accounts:dashboard' %}" class="btn-primary inline">Back to Dashboard</a>
+</div>
+{% endblock %}

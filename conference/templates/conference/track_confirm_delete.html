@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="panel">
+    <h1>Delete Track</h1>
+    <p>Delete track <strong>{{ track.name }}</strong>?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button class="btn-danger" type="submit">Yes, delete</button>
+        <a href="{% url 'conference:detail' track.conference.pk %}" class="btn-secondary">Cancel</a>
+    </form>
+</section>
+{% endblock %}

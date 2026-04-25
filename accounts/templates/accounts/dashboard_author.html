@@ -1,18 +1,80 @@
-{% extends 'base.html' %}
+{% extends 'app_base.html' %}
 
 {% block title %}Author Dashboard — K-Conference{% endblock %}
+{% block topbar_title %}Author Dashboard{% endblock %}
+
+{% block sidebar_nav %}
+    {% include 'partials/sidebar_author.html' with active='dashboard' %}
+{% endblock %}
 
 {% block content %}
-<div class="dash">
-    <header class="dash-head">
-        <h1>Author Dashboard</h1>
-        <p class="dash-sub">Hi {{ user.first_name }} — submit papers and track their status.</p>
-    </header>
+<section class="welcome">
+    <h1>Welcome Back {{ user.first_name }}</h1>
+    <p class="muted">{{ user.profile.affiliation }} &middot; Author</p>
+</section>
 
-    <div class="card-grid">
-        <div class="card"><h2>My Submissions</h2><p>View your papers. (Phase 4)</p></div>
-        <div class="card"><h2>New Submission</h2><p>Submit a new paper. (Phase 4)</p></div>
-        <div class="card"><h2>Reviewer Feedback</h2><p>Read reviews. (Phase 5)</p></div>
+{% if active_conference %}
+<section class="hero-card">
+    <div>
+        <h2>{{ active_conference.name }}</h2>
+        <div class="hero-meta">
+            <span>📅 {{ active_conference.start_date|date:"M j" }} – {{ active_conference.end_date|date:"M j, Y" }}</span>
+            <span>📍 {{ active_conference.location|default:"Online" }}</span>
+        </div>
+        <a href="{% url 'conference:detail' active_conference.pk %}" class="hero-btn">View Schedule</a>
     </div>
-</div>
+    <div class="hero-right">
+        <div class="hero-big">{{ active_conference.days_until_start }}</div>
+        <div class="hero-cap">days until conference</div>
+    </div>
+</section>
+{% endif %}
+
+<section class="stat-grid">
+    <div class="stat"><div class="stat-label">Total submissions</div><div class="stat-value">{{ submissions_total }}</div></div>
+    <div class="stat"><div class="stat-label">Under Review</div><div class="stat-value">{{ submissions_under_review }}</div></div>
+    <div class="stat"><div class="stat-label">Accepted</div><div class="stat-value">{{ submissions_accepted }}</div></div>
+    <div class="stat"><div class="stat-label">Rejected</div><div class="stat-value">{{ submissions_rejected }}</div></div>
+</section>
+
+<section class="row-2">
+    <div class="panel">
+        <div class="panel-head">
+            <h3>My submissions</h3>
+            <a href="{% url 'submissions:my_submissions' %}" class="link-mini">View All</a>
+        </div>
+        {% if recent_submissions %}
+            <table class="data-table">
+                <thead>
+                    <tr><th>Paper Title</th><th>Last Updated</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                {% for s in recent_submissions %}
+                    <tr>
+                        <td><a href="{% url 'submissions:detail' s.pk %}">{{ s.title|truncatechars:42 }}</a></td>
+                        <td class="muted small">{{ s.updated_at|date:"F j, Y" }}</td>
+                        <td><span class="status-pill status-{{ s.status }}">{{ s.get_status_display }}</span></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p class="muted small">You haven't submitted any papers yet.
+                <a href="{% url 'submissions:create' %}">Submit your first paper</a>.
+            </p>
+        {% endif %}
+    </div>
+
+    <div class="panel">
+        <div class="panel-head">
+            <h3>Announcements</h3>
+            <a href="#" class="link-mini">View All</a>
+        </div>
+        <div class="announcement-item">
+            <strong>Welcome to ISCE 2026</strong>
+            <p class="muted small">We're excited to welcome all participants to the International Society Conference Event 2026.</p>
+            <span class="muted small">Mar 19, 2026</span>
+        </div>
+    </div>
+</section>
 {% endblock %}

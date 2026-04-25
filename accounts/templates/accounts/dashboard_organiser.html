@@ -1,21 +1,77 @@
-{% extends 'base.html' %}
+{% extends 'app_base.html' %}
 
 {% block title %}Organiser Dashboard — K-Conference{% endblock %}
+{% block topbar_title %}Organiser Dashboard{% endblock %}
+
+{% block sidebar_nav %}
+    {% include 'partials/sidebar_organiser.html' with active='dashboard' %}
+{% endblock %}
 
 {% block content %}
-<div class="dash">
-    <header class="dash-head">
-        <h1>Organiser Dashboard</h1>
-        <p class="dash-sub">Hi {{ user.first_name }} — manage conferences, submissions and reviews.</p>
-    </header>
+<section class="welcome">
+    <h1>Welcome Back {{ user.first_name }}</h1>
+    <p class="muted">{{ user.profile.affiliation }} &middot; Organiser</p>
+</section>
 
-    <div class="card-grid">
-        <div class="card"><h2>Conferences</h2><p>Create and configure events. (Phase 3)</p></div>
-        <div class="card"><h2>Submissions</h2><p>Monitor incoming papers. (Phase 4)</p></div>
-        <div class="card"><h2>Reviewers</h2><p>Assign reviewers to papers. (Phase 5)</p></div>
-        <div class="card"><h2>Decisions</h2><p>Accept or reject submissions. (Phase 6)</p></div>
-        <div class="card"><h2>Announcements</h2><p>Broadcast updates. (Phase 6)</p></div>
-        <div class="card"><h2>Reports</h2><p>Stats and CSV export. (Phase 7)</p></div>
+{% if active_conference %}
+<section class="hero-card">
+    <div>
+        <h2>{{ active_conference.name }}</h2>
+        <div class="hero-meta">
+            <span>📅 {{ active_conference.start_date|date:"M j" }} – {{ active_conference.end_date|date:"M j, Y" }}</span>
+            <span>📍 {{ active_conference.location|default:"Online" }}</span>
+        </div>
+        <a href="{% url 'conference:detail' active_conference.pk %}" class="hero-btn">
+            View Conference
+        </a>
     </div>
-</div>
+    <div class="hero-right">
+        <div class="hero-big">{{ active_conference.days_until_start }}</div>
+        <div class="hero-cap">days until conference</div>
+    </div>
+</section>
+{% else %}
+<section class="empty-card">
+    <h2>No active conference yet</h2>
+    <p>Create your first conference to get started.</p>
+    <a href="{% url 'conference:create' %}" class="btn-primary inline">＋ Create Conference</a>
+</section>
+{% endif %}
+
+<section class="stat-grid">
+    <div class="stat"><div class="stat-label">Conferences</div><div class="stat-value">{{ conferences_count }}</div></div>
+    <div class="stat"><div class="stat-label">Submissions</div><div class="stat-value">{{ submissions_count|default:0 }}</div></div>
+    <div class="stat"><div class="stat-label">Reviews</div><div class="stat-value">{{ reviews_count|default:0 }}</div></div>
+    <div class="stat"><div class="stat-label">Participants</div><div class="stat-value">{{ participants_count|default:0 }}</div></div>
+</section>
+
+<section class="row-2">
+    <div class="panel">
+        <div class="panel-head">
+            <h3>My Conferences</h3>
+            <a href="{% url 'conference:mine' %}" class="link-mini">View All</a>
+        </div>
+        {% if conferences %}
+            <ul class="list">
+            {% for c in conferences %}
+                <li>
+                    <a href="{% url 'conference:detail' c.pk %}"><strong>{{ c.name }}</strong></a>
+                    <span class="muted small">{{ c.start_date|date:"M j" }} – {{ c.end_date|date:"M j, Y" }}</span>
+                    <span class="badge badge-{{ c.status }}">{{ c.get_status_display }}</span>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p class="muted">You haven't created any conferences yet.</p>
+        {% endif %}
+    </div>
+
+    <div class="panel">
+        <div class="panel-head">
+            <h3>Announcements</h3>
+            <a href="#" class="link-mini">View All</a>
+        </div>
+        <p class="muted small">Announcements will appear here in Phase 6.</p>
+    </div>
+</section>
 {% endblock %}

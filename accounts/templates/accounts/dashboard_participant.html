@@ -1,18 +1,40 @@
-{% extends 'base.html' %}
+{% extends 'app_base.html' %}
 
 {% block title %}Participant Dashboard — K-Conference{% endblock %}
+{% block topbar_title %}Participant Dashboard{% endblock %}
+
+{% block sidebar_nav %}
+    {% include 'partials/sidebar_participant.html' with active='dashboard' %}
+{% endblock %}
 
 {% block content %}
-<div class="dash">
-    <header class="dash-head">
-        <h1>Participant Dashboard</h1>
-        <p class="dash-sub">Hi {{ user.first_name }} — explore the programme and join sessions.</p>
-    </header>
+<section class="welcome">
+    <h1>Welcome Back {{ user.first_name }}</h1>
+    <p class="muted">{{ user.profile.affiliation }} &middot; Participant</p>
+</section>
 
-    <div class="card-grid">
-        <div class="card"><h2>My Registrations</h2><p>Conferences you've signed up for. (Phase 3)</p></div>
-        <div class="card"><h2>Programme</h2><p>Sessions and tracks. (Phase 3)</p></div>
-        <div class="card"><h2>Announcements</h2><p>Latest updates. (Phase 6)</p></div>
+<section class="stat-grid">
+    <div class="stat"><div class="stat-label">Registered</div><div class="stat-value">{{ registrations.count }}</div></div>
+    <div class="stat"><div class="stat-label">Upcoming</div><div class="stat-value">{{ upcoming_count|default:0 }}</div></div>
+</section>
+
+<section class="panel">
+    <div class="panel-head">
+        <h3>My Registrations</h3>
+        <a href="{% url 'conference:list' %}" class="link-mini">Browse Conferences</a>
     </div>
-</div>
+    {% if registrations %}
+        <ul class="list">
+        {% for r in registrations %}
+            <li>
+                <a href="{% url 'conference:detail' r.conference.pk %}"><strong>{{ r.conference.name }}</strong></a>
+                <span class="muted small">{{ r.conference.start_date|date:"M j" }} – {{ r.conference.end_date|date:"M j, Y" }}</span>
+                <span class="badge badge-{{ r.status }}">{{ r.get_status_display }}</span>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p class="muted small">You haven't registered for any conferences yet. <a href="{% url 'conference:list' %}">Browse conferences</a>.</p>
+    {% endif %}
+</section>
 {% endblock %}

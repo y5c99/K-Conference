@@ -1,0 +1,75 @@
+{% extends 'app_base.html' %}
+
+{% block title %}{% if mode == 'edit' %}Edit{% else %}New{% endif %} Submission — K-Conference{% endblock %}
+{% block topbar_title %}Author Dashboard{% endblock %}
+
+{% block sidebar_nav %}
+    {% include 'partials/sidebar_author.html' with active='submissions' %}
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'submissions:my_submissions' %}" class="back-link">← Back to Submissions</a>
+
+<section class="page-head" style="margin-top: 0.5rem;">
+    <div>
+        <h1>{% if mode == 'edit' %}Edit Submission{% else %}New Submission{% endif %}</h1>
+        <p class="muted">Submit a paper to {{ conference.name }}</p>
+    </div>
+</section>
+
+{% if conference.submission_deadline %}
+<div class="info-callout">
+    <span class="info-icon">🕒</span>
+    <div>
+        <strong>Submission Deadline</strong><br>
+        {{ conference.submission_deadline|date:"F j, Y" }}<br>
+        <span class="muted small">You can save drafts and submit later before the deadline.</span>
+    </div>
+</div>
+{% endif %}
+
+<form method="post" class="big-form panel">
+    {% csrf_token %}
+
+    <h3 class="form-section-title">Paper Details</h3>
+    <p class="muted small" style="margin-bottom: 1rem;">Provide information about your paper.</p>
+
+    <div class="form-row">
+        <label for="{{ form.title.id_for_label }}">Title *</label>
+        {{ form.title }}
+        {% if form.title.errors %}<div class="field-error">{{ form.title.errors.0 }}</div>{% endif %}
+    </div>
+
+    <div class="form-row">
+        <label for="{{ form.abstract.id_for_label }}">Abstract *</label>
+        {{ form.abstract }}
+        <div class="muted small">Max 300 words.</div>
+        {% if form.abstract.errors %}<div class="field-error">{{ form.abstract.errors.0 }}</div>{% endif %}
+    </div>
+
+    <div class="form-row">
+        <label for="{{ form.track.id_for_label }}">Track *</label>
+        {{ form.track }}
+        {% if form.track.errors %}<div class="field-error">{{ form.track.errors.0 }}</div>{% endif %}
+    </div>
+
+    <div class="form-row">
+        <label for="{{ form.keywords.id_for_label }}">Keywords</label>
+        {{ form.keywords }}
+        <div class="muted small">Comma-separated.</div>
+    </div>
+
+    <div class="form-row">
+        <label for="{{ form.co_authors.id_for_label }}">Co-authors</label>
+        {{ form.co_authors }}
+        <div class="muted small">Optional. One per line: Name, email, affiliation.</div>
+    </div>
+
+    <div class="form-actions">
+        <a href="{% url 'submissions:my_submissions' %}" class="btn-secondary">Cancel</a>
+        <button type="submit" class="btn-primary inline">
+            {% if mode == 'edit' %}Save Changes{% else %}Save Draft & Continue{% endif %} ›
+        </button>
+    </div>
+</form>
+{% endblock %}

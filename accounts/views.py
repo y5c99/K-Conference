@@ -152,21 +152,53 @@ def dashboard_redirect(request):
 
 # Each dashboard is a placeholder for now. We'll fill them with real
 # data in later phases.
-
 @login_required
 def dashboard_organiser(request):
     if not request.user.profile.is_organiser():
         messages.error(request, 'You do not have permission to view that page.')
         return redirect('accounts:dashboard')
-    return render(request, 'accounts/dashboard_organiser.html')
 
+    from conference.models import Conference
+    conferences = Conference.objects.filter(organiser=request.user)
+    active_conference = conferences.filter(
+        status=Conference.STATUS_OPEN
+    ).order_by('start_date').first() or conferences.first()
+
+    return render(request, 'accounts/dashboard_organiser.html', {
+        'conferences': conferences,
+        'active_conference': active_conference,
+        'conferences_count': conferences.count(),
+        'participants_count': sum(c.participants_count for c in conferences),
+    })
 
 @login_required
 def dashboard_author(request):
     if not request.user.profile.is_author():
         messages.error(request, 'You do not have permission to view that page.')
         return redirect('accounts:dashboard')
-    return render(request, 'accounts/dashboard_author.html')
+
+    from conference.models import Conference
+    from submissions.models import Submission
+
+    active_conference = Conference.objects.filter(
+        status=Conference.STATUS_OPEN
+    ).order_by('start_date').first()
+
+    submissions = Submission.objects.filter(author=request.user)
+
+    return render(request, 'accounts/dashboard_author.html', {
+        'active_conference': active_conference,
+        'submissions': submissions,
+        'submissions_total': submissions.count(),
+        'submissions_under_review': submissions.filter(
+            status__in=[Submission.STATUS_SUBMITTED, Submission.STATUS_UNDER_REVIEW]
+        ).count(),
+        'submissions_accepted': submissions.filter(
+            status=Submission.STATUS_ACCEPTED).count(),
+        'submissions_rejected': submissions.filter(
+            status=Submission.STATUS_REJECTED).count(),
+        'recent_submissions': submissions.order_by('-updated_at')[:5],
+    })
 
 
 @login_required
@@ -182,4 +214,16 @@ def dashboard_participant(request):
     if not request.user.profile.is_participant():
         messages.error(request, 'You do not have permission to view that page.')
         return redirect('accounts:dashboard')
-    return render(request, 'accounts/dashboard_participant.html')
+
+    from conference.models import Registration
+    from django.utils import timezone
+
+    registrations = Registration.objects.filter(user=request.user)
+    upcoming_count = registrations.filter(
+        conference__start_date__gte=timezone.localdate()
+    ).count()
+
+    return render(request, 'accounts/dashboard_participant.html', {
+        'registrations': registrations,
+        'upcoming_count': upcoming_count,
+    })

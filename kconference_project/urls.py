@@ -18,8 +18,8 @@ urlpatterns = [
 
     # We'll fill these in during later phases. They're commented out for now.
      path('accounts/', include('accounts.urls')),
-    # path('conferences/', include('conference.urls')),
-    # path('submissions/', include('submissions.urls')),
+     path('conferences/', include('conference.urls')),
+     path('submissions/', include('submissions.urls')),
     # path('reviews/', include('reviews.urls')),
 ]
 

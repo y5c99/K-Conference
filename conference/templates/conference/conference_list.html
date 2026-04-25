@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Conferences — K-Conference{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <h1>Conferences</h1>
+    {% if user.is_authenticated and user.profile.is_organiser %}
+        <a href="{% url 'conference:create' %}" class="btn-primary inline">＋ New Conference</a>
+    {% endif %}
+</section>
+
+{% if conferences %}
+    <div class="card-grid">
+        {% for c in conferences %}
+        <a href="{% url 'conference:detail' c.pk %}" class="card link-card">
+            <h2>{{ c.name }}</h2>
+            <p class="muted small">
+                {{ c.start_date|date:"M j" }} – {{ c.end_date|date:"M j, Y" }}
+                &middot; {{ c.location|default:"Online" }}
+            </p>
+            <span class="badge badge-{{ c.status }}">{{ c.get_status_display }}</span>
+        </a>
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="muted">No conferences are currently published.</p>
+{% endif %}
+{% endblock %}

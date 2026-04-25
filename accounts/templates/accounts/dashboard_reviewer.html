@@ -1,18 +1,29 @@
-{% extends 'base.html' %}
+{% extends 'app_base.html' %}
 
 {% block title %}Reviewer Dashboard — K-Conference{% endblock %}
+{% block topbar_title %}Reviewer Dashboard{% endblock %}
+
+{% block sidebar_nav %}
+    {% include 'partials/sidebar_reviewer.html' with active='dashboard' %}
+{% endblock %}
 
 {% block content %}
-<div class="dash">
-    <header class="dash-head">
-        <h1>Reviewer Dashboard</h1>
-        <p class="dash-sub">Hi {{ user.first_name }} — your assigned reviews.</p>
-    </header>
+<section class="welcome">
+    <h1>Welcome Back {{ user.first_name }}</h1>
+    <p class="muted">{{ user.profile.affiliation }} &middot; Reviewer</p>
+</section>
 
-    <div class="card-grid">
-        <div class="card"><h2>Assigned Papers</h2><p>Papers awaiting review. (Phase 5)</p></div>
-        <div class="card"><h2>Completed Reviews</h2><p>Your past reviews. (Phase 5)</p></div>
-        <div class="card"><h2>Conflicts of Interest</h2><p>Recuse from papers. (Phase 5)</p></div>
+<section class="stat-grid">
+    <div class="stat"><div class="stat-label">Assigned Reviews</div><div class="stat-value">0</div></div>
+    <div class="stat"><div class="stat-label">Completed</div><div class="stat-value">0</div></div>
+    <div class="stat"><div class="stat-label">Pending</div><div class="stat-value">0</div></div>
+    <div class="stat"><div class="stat-label">Days until Deadline</div><div class="stat-value">—</div></div>
+</section>
+
+<section class="panel">
+    <div class="panel-head">
+        <h3>Assigned Papers</h3>
     </div>
-</div>
+    <p class="muted small">Papers assigned to you for review will appear here in Phase 5.</p>
+</section>
 {% endblock %}
