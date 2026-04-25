@@ -1,0 +1,40 @@
+{% extends 'accounts/auth_base.html' %}
+
+{% block title %}Sign Up — K-Conference{% endblock %}
+
+{% block step_indicator %}
+    <div class="step-indicator">
+        <span class="step active"></span>
+        <span class="step"></span>
+        <span class="step"></span>
+    </div>
+{% endblock %}
+
+{% block auth_content %}
+<form method="post" class="role-form">
+    {% csrf_token %}
+
+    <h2 class="auth-title">Which of the following best describes your role?</h2>
+
+    <div class="role-options">
+        {% for role in roles %}
+        <label class="role-option {% if selected == role.value %}selected{% endif %}">
+            <input type="radio" name="role" value="{{ role.value }}"
+                   {% if selected == role.value %}checked{% endif %}>
+            <span class="role-radio"></span>
+            <span class="role-text">
+                <span class="role-name">{{ role.name }}</span>
+                <span class="role-desc">{{ role.description }}</span>
+            </span>
+        </label>
+        {% endfor %}
+    </div>
+
+    <button type="submit" class="btn-primary">Next ›</button>
+
+    <p class="auth-foot">
+        Already have an account?
+        <a href="{% url 'accounts:login' %}">Log in</a>
+    </p>
+</form>
+{% endblock %}

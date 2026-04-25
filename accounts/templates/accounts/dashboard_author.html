@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Author Dashboard — K-Conference{% endblock %}
+
+{% block content %}
+<div class="dash">
+    <header class="dash-head">
+        <h1>Author Dashboard</h1>
+        <p class="dash-sub">Hi {{ user.first_name }} — submit papers and track their status.</p>
+    </header>
+
+    <div class="card-grid">
+        <div class="card"><h2>My Submissions</h2><p>View your papers. (Phase 4)</p></div>
+        <div class="card"><h2>New Submission</h2><p>Submit a new paper. (Phase 4)</p></div>
+        <div class="card"><h2>Reviewer Feedback</h2><p>Read reviews. (Phase 5)</p></div>
+    </div>
+</div>
+{% endblock %}

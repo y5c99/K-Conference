@@ -1,0 +1,54 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}K-Conference{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <script src="{% static 'js/auth.js' %}"></script>
+</head>
+<body>
+
+    <header class="navbar">
+        <div class="navbar-inner">
+            <a href="{% url 'core:home' %}" class="brand">K-Conference</a>
+
+            <nav class="nav-links">
+                <a href="{% url 'core:home' %}">Home</a>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'accounts:dashboard' %}">Dashboard</a>
+                    <span class="nav-user">
+                        Hi, {{ user.first_name|default:user.username }}
+                    </span>
+                    <a href="{% url 'accounts:logout' %}" class="nav-btn">Log out</a>
+                {% else %}
+                    <a href="{% url 'accounts:login' %}">Log in</a>
+                    <a href="{% url 'accounts:signup_role' %}" class="nav-btn">Sign up</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    {# Flash messages (success/error/info) #}
+    {% if messages %}
+        <div class="messages-wrap">
+            <div class="messages">
+                {% for message in messages %}
+                    <div class="message message-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+ <footer class="footer">
+        <p>&copy; 2026 K-Conference &middot; Built for CSC-44114 Agile Web Engineering</p>
+    </footer>
+
+    <script src="{% static 'js/auth.js' %}"></script>
+</body>
+</html>

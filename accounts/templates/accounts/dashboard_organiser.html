@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Organiser Dashboard — K-Conference{% endblock %}
+
+{% block content %}
+<div class="dash">
+    <header class="dash-head">
+        <h1>Organiser Dashboard</h1>
+        <p class="dash-sub">Hi {{ user.first_name }} — manage conferences, submissions and reviews.</p>
+    </header>
+
+    <div class="card-grid">
+        <div class="card"><h2>Conferences</h2><p>Create and configure events. (Phase 3)</p></div>
+        <div class="card"><h2>Submissions</h2><p>Monitor incoming papers. (Phase 4)</p></div>
+        <div class="card"><h2>Reviewers</h2><p>Assign reviewers to papers. (Phase 5)</p></div>
+        <div class="card"><h2>Decisions</h2><p>Accept or reject submissions. (Phase 6)</p></div>
+        <div class="card"><h2>Announcements</h2><p>Broadcast updates. (Phase 6)</p></div>
+        <div class="card"><h2>Reports</h2><p>Stats and CSV export. (Phase 7)</p></div>
+    </div>
+</div>
+{% endblock %}

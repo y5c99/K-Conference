@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome — K-Conference{% endblock %}
+
+{% block content %}
+    <section class="hero">
+        <h1>Welcome to K-Conference</h1>
+        <p class="lead">
+            The academic conference management platform.
+            Submit papers, review, register, and stay informed.
+        </p>
+    </section>
+
+    <section class="card-grid">
+        <div class="card">
+            <h2>For Authors</h2>
+            <p>Submit papers, track status, and receive reviewer feedback.</p>
+        </div>
+
+        <div class="card">
+            <h2>For Reviewers</h2>
+            <p>Access assigned papers and submit structured reviews.</p>
+        </div>
+
+        <div class="card">
+            <h2>For Organisers</h2>
+            <p>Configure events, manage submissions, publish schedules.</p>
+        </div>
+
+        <div class="card">
+            <h2>For Participants</h2>
+            <p>Register, view the programme, and join sessions.</p>
+        </div>
+    </section>
+{% endblock %}

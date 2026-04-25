@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="auth-screen">
+    <div class="auth-card">
+
+        {# Top header inside the card: brand + step indicator #}
+        <div class="auth-header">
+            <div class="auth-brand">
+                <div class="auth-brand-name">K-Conference</div>
+                <div class="auth-brand-sub">ISCE 2026</div>
+            </div>
+
+            {% block step_indicator %}{% endblock %}
+
+            {% block back_button %}<div class="auth-back-spacer"></div>{% endblock %}
+        </div>
+
+        {# Main form area #}
+        <div class="auth-body">
+            {% block auth_content %}{% endblock %}
+        </div>
+
+    </div>
+</div>
+{% endblock %}

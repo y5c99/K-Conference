@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Participant Dashboard — K-Conference{% endblock %}
+
+{% block content %}
+<div class="dash">
+    <header class="dash-head">
+        <h1>Participant Dashboard</h1>
+        <p class="dash-sub">Hi {{ user.first_name }} — explore the programme and join sessions.</p>
+    </header>
+
+    <div class="card-grid">
+        <div class="card"><h2>My Registrations</h2><p>Conferences you've signed up for. (Phase 3)</p></div>
+        <div class="card"><h2>Programme</h2><p>Sessions and tracks. (Phase 3)</p></div>
+        <div class="card"><h2>Announcements</h2><p>Latest updates. (Phase 6)</p></div>
+    </div>
+</div>
+{% endblock %}

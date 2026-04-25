@@ -1,0 +1,34 @@
+{% extends 'accounts/auth_base.html' %}
+
+{% block title %}Log In — K-Conference{% endblock %}
+
+{% block auth_content %}
+<form method="post" class="login-form">
+    {% csrf_token %}
+
+    <h2 class="auth-title auth-title-center">Welcome Back</h2>
+
+    {% if form.non_field_errors %}
+        <div class="form-errors">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    <div class="form-row">
+        <label for="{{ form.username.id_for_label }}">Email Address</label>
+        {{ form.username }}
+    </div>
+
+    <div class="form-row">
+        <label for="{{ form.password.id_for_label }}">Password</label>
+        {{ form.password }}
+    </div>
+
+    <p class="forgot"><a href="#">Forgot Password?</a></p>
+
+    <button type="submit" class="btn-primary">Log In</button>
+
+    <p class="auth-foot">
+        Don't have an account?
+        <a href="{% url 'accounts:signup_role' %}">Sign up</a>
+    </p>
+</form>
+{% endblock %}

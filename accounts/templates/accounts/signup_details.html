@@ -1,0 +1,79 @@
+{% extends 'accounts/auth_base.html' %}
+
+{% block title %}Create Account — K-Conference{% endblock %}
+
+{% block step_indicator %}
+    <div class="step-indicator">
+        <span class="step done"></span>
+        <span class="step active"></span>
+        <span class="step"></span>
+    </div>
+{% endblock %}
+
+{% block back_button %}
+    <a href="{% url 'accounts:signup_role' %}" class="auth-back" aria-label="Back">‹</a>
+{% endblock %}
+
+{% block auth_content %}
+<form method="post" class="details-form">
+    {% csrf_token %}
+
+    <h2 class="auth-title">Create Account</h2>
+
+    {% if form.non_field_errors %}
+        <div class="form-errors">{{ form.non_field_errors }}</div>
+    {% endif %}
+
+    <div class="form-row">
+        <label for="{{ form.first_name.id_for_label }}">First Name</label>
+        {{ form.first_name }}
+        {% if form.first_name.errors %}<div class="field-error">{{ form.first_name.errors.0 }}</div>{% endif %}
+    </div>
+
+    <div class="form-row">
+        <label for="{{ form.last_name.id_for_label }}">Last Name</label>
+        {{ form.last_name }}
+        {% if form.last_name.errors %}<div class="field-error">{{ form.last_name.errors.0 }}</div>{% endif %}
+    </div>
+
+    <div class="form-row">
+        <label for="{{ form.email.id_for_label }}">Email Address</label>
+        {{ form.email }}
+        {% if form.email.errors %}<div class="field-error">{{ form.email.errors.0 }}</div>{% endif %}
+    </div>
+
+    <div class="form-row">
+        <label for="{{ form.affiliation.id_for_label }}">Organisation/Affiliation</label>
+        {{ form.affiliation }}
+        {% if form.affiliation.errors %}<div class="field-error">{{ form.affiliation.errors.0 }}</div>{% endif %}
+    </div>
+
+    <div class="form-row">
+        <label for="{{ form.password1.id_for_label }}">Password</label>
+        {{ form.password1 }}
+        {% if form.password1.errors %}<div class="field-error">{{ form.password1.errors.0 }}</div>{% endif %}
+    </div>
+
+    <div class="form-row">
+        <label for="{{ form.password2.id_for_label }}">Confirm Password</label>
+        {{ form.password2 }}
+        {% if form.password2.errors %}<div class="field-error">{{ form.password2.errors.0 }}</div>{% endif %}
+    </div>
+
+    <button type="submit" class="btn-primary">Next ›</button>
+
+    <div class="checkbox-row">
+        {{ form.agree_terms }}
+        <label for="{{ form.agree_terms.id_for_label }}">
+            I agree to the <a href="#">Terms of Service</a>
+            and <a href="#">Privacy Policy</a>
+        </label>
+    </div>
+    {% if form.agree_terms.errors %}<div class="field-error">{{ form.agree_terms.errors.0 }}</div>{% endif %}
+
+    <p class="auth-foot">
+        Already have an account?
+        <a href="{% url 'accounts:login' %}">Log in</a>
+    </p>
+</form>
+{% endblock %}

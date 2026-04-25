@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block title %}Reviewer Dashboard — K-Conference{% endblock %}
+
+{% block content %}
+<div class="dash">
+    <header class="dash-head">
+        <h1>Reviewer Dashboard</h1>
+        <p class="dash-sub">Hi {{ user.first_name }} — your assigned reviews.</p>
+    </header>
+
+    <div class="card-grid">
+        <div class="card"><h2>Assigned Papers</h2><p>Papers awaiting review. (Phase 5)</p></div>
+        <div class="card"><h2>Completed Reviews</h2><p>Your past reviews. (Phase 5)</p></div>
+        <div class="card"><h2>Conflicts of Interest</h2><p>Recuse from papers. (Phase 5)</p></div>
+    </div>
+</div>
+{% endblock %}
