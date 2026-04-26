@@ -1,0 +1,69 @@
+{% extends 'app_base.html' %}
+
+{% block title %}Reviews — {{ submission.title }}{% endblock %}
+{% block topbar_title %}Reviews{% endblock %}
+
+{% block sidebar_nav %}
+    {% include 'partials/sidebar_organiser.html' with active='conferences' %}
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'submissions:detail' submission.pk %}" class="back-link">← Back to Submission</a>
+
+<section class="page-head" style="margin-top: 0.5rem;">
+    <div>
+        <h1>Reviews for this paper</h1>
+        <p class="muted">{{ submission.title }}</p>
+    </div>
+    <a href="{% url 'reviews:assign' submission.pk %}" class="btn-primary inline">＋ Assign Reviewer</a>
+</section>
+
+{% if reviews %}
+    <div class="submission-list">
+    {% for r in reviews %}
+        <div class="submission-card">
+            <div class="submission-card-main">
+                <h3>{{ r.reviewer.get_full_name|default:r.reviewer.username }}</h3>
+                <p class="muted small">Assigned: {{ r.assigned_at|date:"M j, Y" }}</p>
+                {% if r.completed_at %}
+                    <p class="muted small">Completed: {{ r.completed_at|date:"M j, Y H:i" }}</p>
+                {% endif %}
+                {% if r.average_score %}
+                    <p class="muted small">Avg score: <strong>{{ r.average_score }}</strong>
+                        {% if r.recommendation %} &middot; {{ r.get_recommendation_display }}{% endif %}
+                    </p>
+                {% endif %}
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                <span class="status-pill status-review-{{ r.status }}">{{ r.get_status_display }}</span>
+                {% if r.is_completed %}
+                    <a href="{% url 'reviews:view_review' r.pk %}" class="btn-secondary">View</a>
+                {% else %}
+                    <a href="{% url 'reviews:remove_assignment' r.pk %}" class="btn-secondary">Remove</a>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-card">
+        <h2>No reviewers assigned yet</h2>
+        <p>Click "＋ Assign Reviewer" to start.</p>
+    </div>
+{% endif %}
+
+{% if conflicts %}
+<section class="panel" style="margin-top: 1.5rem;">
+    <h3>Declared Conflicts of Interest</h3>
+    <ul class="list">
+    {% for c in conflicts %}
+        <li>
+            <strong>{{ c.reviewer.get_full_name|default:c.reviewer.username }}</strong>
+            <span class="muted small">— {{ c.reason }}</span>
+            <span class="muted small">({{ c.declared_at|date:"M j, Y" }})</span>
+        </li>
+    {% endfor %}
+    </ul>
+</section>
+{% endif %}
+{% endblock %}

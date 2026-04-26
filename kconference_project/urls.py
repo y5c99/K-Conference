@@ -20,7 +20,7 @@ urlpatterns = [
      path('accounts/', include('accounts.urls')),
      path('conferences/', include('conference.urls')),
      path('submissions/', include('submissions.urls')),
-    # path('reviews/', include('reviews.urls')),
+    path('reviews/', include('reviews.urls')),
 ]
 
 # During development, let Django serve uploaded files (the 'media' folder).

@@ -1,0 +1,150 @@
+{% extends 'app_base.html' %}
+
+{% block title %}Review — {{ submission.title }}{% endblock %}
+{% block topbar_title %}Submission Details{% endblock %}
+
+{% block sidebar_nav %}
+    {% include 'partials/sidebar_reviewer.html' with active='assigned' %}
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'reviews:my_assigned' %}" class="back-link">← Back to Assigned Papers</a>
+
+<section class="page-head" style="margin-top: 0.5rem;">
+    <div>
+        <h1>Submission Details</h1>
+        <p class="muted">View the submission details and review status</p>
+    </div>
+</section>
+
+{# ---- Conflict of Interest box ---- #}
+<section class="panel">
+    <h3>Conflict of Interest</h3>
+    <p class="muted small">
+        Declare if you have any conflict of interest with this submission.
+    </p>
+    <a href="{% url 'reviews:declare_conflict' review.pk %}" class="link-mini danger">
+        I have a conflict of interest with this submission
+    </a>
+</section>
+
+{# ---- Paper Details ---- #}
+<section class="panel">
+    <h3>Paper Details</h3>
+    <p><strong>Paper Title</strong><br>{{ submission.title }}</p>
+    <p><strong>Track</strong><br>{{ submission.track.name|default:"—" }}</p>
+</section>
+
+<section class="panel">
+    <h3>Abstract</h3>
+    <p>{{ submission.abstract|linebreaksbr }}</p>
+</section>
+
+<section class="panel">
+    <h3>Files</h3>
+    {% if submission.files.exists %}
+        <ul class="file-list">
+        {% for f in submission.files.all %}
+            <li>
+                <span class="file-icon">📄</span>
+                <div class="file-meta">
+                    <strong>{{ f.filename }}</strong>
+                    <span class="muted small">v{{ f.version }} &middot; uploaded {{ f.uploaded_at|date:"M j, Y" }}</span>
+                </div>
+                <a href="{% url 'submissions:download_file' f.pk %}" class="btn-secondary">↓ Download</a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p class="muted small">No files uploaded.</p>
+    {% endif %}
+</section>
+
+{# ---- The review form proper ---- #}
+<form method="post" class="big-form">
+    {% csrf_token %}
+
+    {# Evaluation sliders #}
+    <section class="panel">
+        <h3>Evaluation Criteria</h3>
+        <p class="muted small" style="margin-bottom: 1.25rem;">
+            Rate the paper on each criterion (1–5 scale).
+        </p>
+
+        {% for s in sliders %}
+            <div class="slider-row">
+                <div class="slider-head">
+                    <label for="criterion_{{ s.criterion.pk }}">{{ s.criterion.name }}</label>
+                    <output id="out_{{ s.criterion.pk }}">{{ s.value }}/{{ s.criterion.max_score }}</output>
+                </div>
+                <input type="range"
+                       name="criterion_{{ s.criterion.pk }}"
+                       id="criterion_{{ s.criterion.pk }}"
+                       min="{{ s.criterion.min_score }}"
+                       max="{{ s.criterion.max_score }}"
+                       value="{{ s.value }}"
+                       class="rubric-slider"
+                       oninput="document.getElementById('out_{{ s.criterion.pk }}').value = this.value + '/{{ s.criterion.max_score }}';">
+                <div class="slider-scale">
+                    <span>Poor ({{ s.criterion.min_score }})</span>
+                    <span>Excellent ({{ s.criterion.max_score }})</span>
+                </div>
+                {% if s.criterion.description %}
+                    <p class="muted small">{{ s.criterion.description }}</p>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </section>
+
+    {# Written feedback #}
+    <section class="panel">
+        <h3>Written Feedback</h3>
+        <p class="muted small" style="margin-bottom: 1rem;">
+            Provide detailed feedback for the author.
+        </p>
+
+        <div class="form-row">
+            <label for="{{ form.strengths.id_for_label }}">{{ form.strengths.label }}</label>
+            {{ form.strengths }}
+            {% if form.strengths.errors %}<div class="field-error">{{ form.strengths.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-row">
+            <label for="{{ form.weaknesses.id_for_label }}">{{ form.weaknesses.label }}</label>
+            {{ form.weaknesses }}
+            {% if form.weaknesses.errors %}<div class="field-error">{{ form.weaknesses.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-row">
+            <label for="{{ form.additional_comments.id_for_label }}">{{ form.additional_comments.label }}</label>
+            {{ form.additional_comments }}
+        </div>
+    </section>
+
+    {# Recommendation #}
+    <section class="panel">
+        <h3>Overall Recommendation</h3>
+        <p class="muted small" style="margin-bottom: 1rem;">
+            Your recommendation for this paper.
+        </p>
+
+        <div class="recommendation-list">
+            {% for value, label in form.recommendation.field.choices %}
+                {% if value %}
+                <label class="rec-option">
+                    <input type="radio" name="recommendation" value="{{ value }}"
+                           {% if form.recommendation.value == value %}checked{% endif %}>
+                    <span class="rec-label">{{ label }}</span>
+                </label>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% if form.recommendation.errors %}<div class="field-error">{{ form.recommendation.errors.0 }}</div>{% endif %}
+    </section>
+
+    <div class="form-actions">
+        <a href="{% url 'reviews:my_assigned' %}" class="btn-secondary">Cancel</a>
+        <button type="submit" class="btn-primary inline">Submit Review</button>
+    </div>
+</form>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'app_base.html' %}
+
+{% block title %}Declare Conflict — K-Conference{% endblock %}
+{% block topbar_title %}Conflict of Interest{% endblock %}
+
+{% block sidebar_nav %}
+    {% include 'partials/sidebar_reviewer.html' with active='assigned' %}
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'reviews:edit' review.pk %}" class="back-link">← Back to Review</a>
+
+<section class="page-head" style="margin-top: 0.5rem;">
+    <div>
+        <h1>Submission Details</h1>
+        <p class="muted">View the submission details and review status</p>
+    </div>
+</section>
+
+<div class="conflict-card">
+    <h3>Conflict of Interest</h3>
+    <p class="muted small">
+        Declare if you have any conflict of interest with this submission.
+    </p>
+
+    <div class="conflict-checkbox">
+        <span class="check-icon">☑</span>
+        <span>I have a conflict of interest with this submission (e.g. co-author, colleague, competitor)</span>
+    </div>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="conflict-callout">
+            <strong>⚠ Conflict of Interest Declared</strong>
+            <p class="muted small">Please recuse yourself from reviewing this paper.</p>
+        </div>
+
+        <div class="form-row">
+            <label for="{{ form.reason.id_for_label }}">{{ form.reason.label }}</label>
+            {{ form.reason }}
+            {% if form.reason.errors %}<div class="field-error">{{ form.reason.errors.0 }}</div>{% endif %}
+        </div>
+
+        <button type="submit" class="btn-danger block">Recuse Myself from this Review</button>
+    </form>
+</div>
+{% endblock %}

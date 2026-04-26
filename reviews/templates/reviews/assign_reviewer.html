@@ -1,0 +1,40 @@
+{% extends 'app_base.html' %}
+
+{% block title %}Assign Reviewer — K-Conference{% endblock %}
+{% block topbar_title %}Assign Reviewer{% endblock %}
+
+{% block sidebar_nav %}
+    {% include 'partials/sidebar_organiser.html' with active='conferences' %}
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'reviews:submission_reviews' submission.pk %}" class="back-link">← Back to Reviews</a>
+
+<section class="page-head" style="margin-top: 0.5rem;">
+    <div>
+        <h1>Assign Reviewer</h1>
+        <p class="muted">{{ submission.title }}</p>
+    </div>
+</section>
+
+{% if has_reviewers %}
+    <form method="post" class="big-form panel">
+        {% csrf_token %}
+        <div class="form-row">
+            <label for="{{ form.reviewer.id_for_label }}">Reviewer</label>
+            {{ form.reviewer }}
+            {% if form.reviewer.errors %}<div class="field-error">{{ form.reviewer.errors.0 }}</div>{% endif %}
+        </div>
+
+        <div class="form-actions">
+            <a href="{% url 'reviews:submission_reviews' submission.pk %}" class="btn-secondary">Cancel</a>
+            <button type="submit" class="btn-primary inline">Assign</button>
+        </div>
+    </form>
+{% else %}
+    <div class="empty-card">
+        <h2>No reviewers available</h2>
+        <p>All reviewers in the system are already assigned to this submission, or none have signed up yet.</p>
+    </div>
+{% endif %}
+{% endblock %}

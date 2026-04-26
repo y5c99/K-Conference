@@ -33,7 +33,8 @@ from .forms import SubmissionForm, SubmissionFileForm
 # ---------- Permission helpers ----------
 
 def _can_view_submission(user, submission):
-    """Authors see their own; organisers see those for their conferences."""
+    """Authors see their own; organisers see those for their conferences;
+    reviewers see those they're assigned to."""
     if not user.is_authenticated:
         return False
     if user == submission.author:
@@ -42,7 +43,12 @@ def _can_view_submission(user, submission):
         return True
     if user.is_staff:
         return True
-    # Reviewers will be added in Phase 5.
+    # Phase 5: assigned reviewers can also view
+    from reviews.models import Review
+    if Review.objects.filter(
+        submission=submission, reviewer=user,
+    ).exclude(status=Review.STATUS_RECUSED).exists():
+        return True
     return False
 
 

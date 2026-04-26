@@ -1,0 +1,45 @@
+{% extends 'app_base.html' %}
+
+{% block title %}Assigned Papers — K-Conference{% endblock %}
+{% block topbar_title %}Assigned Papers{% endblock %}
+
+{% block sidebar_nav %}
+    {% include 'partials/sidebar_reviewer.html' with active='assigned' %}
+{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <div>
+        <h1>Assigned Papers</h1>
+        <p class="muted">Papers awaiting your review</p>
+    </div>
+</section>
+
+{% if reviews %}
+    <div class="submission-list">
+    {% for r in reviews %}
+        <div class="submission-card">
+            <div class="submission-card-main">
+                <h3>{{ r.submission.title }}</h3>
+                <p class="muted small">Track: {{ r.submission.track.name|default:"—" }}</p>
+                <p class="muted small">Assigned: {{ r.assigned_at|date:"F j, Y" }}
+                    &middot; <span class="status-pill status-review-{{ r.status }}">{{ r.get_status_display }}</span>
+                </p>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                {% if r.is_completed %}
+                    <a href="{% url 'reviews:view_review' r.pk %}" class="btn-secondary">View Review</a>
+                {% else %}
+                    <a href="{% url 'reviews:edit' r.pk %}" class="btn-primary inline">Start Review</a>
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-card">
+        <h2>No papers assigned yet</h2>
+        <p>When organisers assign you a paper to review, it'll appear here.</p>
+    </div>
+{% endif %}
+{% endblock %}

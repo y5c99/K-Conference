@@ -76,6 +76,11 @@ def conference_create(request):
             conf = form.save(commit=False)
             conf.organiser = request.user
             conf.save()
+
+            # Seed the default rubric (4 criteria) for this conference.
+            from reviews.utils import seed_default_criteria
+            seed_default_criteria(conf)
+
             messages.success(request, f'Conference "{conf.name}" created.')
             return redirect('conference:detail', pk=conf.pk)
     else:

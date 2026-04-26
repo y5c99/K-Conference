@@ -14,16 +14,67 @@
 </section>
 
 <section class="stat-grid">
-    <div class="stat"><div class="stat-label">Assigned Reviews</div><div class="stat-value">0</div></div>
-    <div class="stat"><div class="stat-label">Completed</div><div class="stat-value">0</div></div>
-    <div class="stat"><div class="stat-label">Pending</div><div class="stat-value">0</div></div>
-    <div class="stat"><div class="stat-label">Days until Deadline</div><div class="stat-value">—</div></div>
+    <div class="stat"><div class="stat-label">Assigned Reviews</div><div class="stat-value">{{ assigned_total }}</div></div>
+    <div class="stat"><div class="stat-label">Completed</div><div class="stat-value">{{ completed_count }}</div></div>
+    <div class="stat"><div class="stat-label">Pending</div><div class="stat-value">{{ pending_count }}</div></div>
+    <div class="stat"><div class="stat-label">Days until Deadline</div><div class="stat-value">{{ days_left }}</div></div>
+</section>
+
+{% if next_deadline %}
+<div class="info-callout">
+    <span class="info-icon">🕒</span>
+    <div>
+        <strong>Review deadline</strong><br>
+        All reviews must be submitted by {{ next_deadline|date:"F j, Y H:i" }} UTC.
+    </div>
+</div>
+{% endif %}
+
+<section class="row-2">
+    <div class="panel">
+        <div class="panel-head">
+            <h3>Assigned Papers</h3>
+            <a href="{% url 'reviews:my_assigned' %}" class="link-mini">View All</a>
+        </div>
+        {% if reviews %}
+            <ul class="list">
+            {% for r in reviews %}
+                <li>
+                    <div style="flex: 1;">
+                        <strong>{{ r.submission.title|truncatechars:50 }}</strong><br>
+                        <span class="muted small">Track: {{ r.submission.track.name|default:"—" }}</span>
+                        <span class="muted small">&middot; Assigned: {{ r.assigned_at|date:"M j, Y" }}</span>
+                    </div>
+                    <span class="status-pill status-review-{{ r.status }}">{{ r.get_status_display }}</span>
+                    {% if r.is_completed %}
+                        <a href="{% url 'reviews:view_review' r.pk %}" class="btn-secondary">View Review</a>
+                    {% else %}
+                        <a href="{% url 'reviews:edit' r.pk %}" class="btn-secondary">Start Review</a>
+                    {% endif %}
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p class="muted small">No papers assigned yet.</p>
+        {% endif %}
+    </div>
+
+    <div class="panel">
+        <div class="panel-head">
+            <h3>Announcements</h3>
+            <a href="#" class="link-mini">View All</a>
+        </div>
+        <p class="muted small">Conference announcements will appear here in Phase 6.</p>
+    </div>
 </section>
 
 <section class="panel">
-    <div class="panel-head">
-        <h3>Assigned Papers</h3>
-    </div>
-    <p class="muted small">Papers assigned to you for review will appear here in Phase 5.</p>
+    <h3>Reviewer Guidelines</h3>
+    <ul class="guideline-list">
+        <li>✓ Review papers carefully and provide constructive feedback</li>
+        <li>✓ Declare any conflicts of interest before starting a review</li>
+        <li>✓ Maintain confidentiality of submitted materials</li>
+        <li>✓ Complete reviews before the deadline</li>
+    </ul>
 </section>
 {% endblock %}

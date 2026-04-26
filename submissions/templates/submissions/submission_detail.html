@@ -97,7 +97,7 @@
             {% endif %}
         </section>
 
-        {% if is_author %}
+      {% if is_author %}
         <section class="panel">
             <h3>Actions</h3>
             {% if submission.is_editable_by_author %}
@@ -112,6 +112,13 @@
             {% else %}
                 <p class="muted small">No actions available.</p>
             {% endif %}
+        </section>
+        {% endif %}
+
+        {% if is_organiser %}
+        <section class="panel">
+            <h3>Organiser Actions</h3>
+            <a href="{% url 'reviews:submission_reviews' submission.pk %}" class="btn-secondary block">Manage Reviews</a>
         </section>
         {% endif %}
     </div>

@@ -1,0 +1,21 @@
+{% extends 'app_base.html' %}
+{% block topbar_title %}Remove Assignment{% endblock %}
+
+{% block sidebar_nav %}
+    {% include 'partials/sidebar_organiser.html' with active='conferences' %}
+{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <h1>Remove this assignment?</h1>
+    <p>Reviewer: <strong>{{ review.reviewer.get_full_name|default:review.reviewer.username }}</strong></p>
+    <p>Paper: <strong>{{ review.submission.title }}</strong></p>
+    <p>This cannot be undone.</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button class="btn-danger" type="submit">Yes, remove</button>
+        <a href="{% url 'reviews:submission_reviews' review.submission.pk %}" class="btn-secondary">Cancel</a>
+    </form>
+</section>
+{% endblock %}

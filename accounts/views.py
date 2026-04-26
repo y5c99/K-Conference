@@ -206,7 +206,36 @@ def dashboard_reviewer(request):
     if not request.user.profile.is_reviewer():
         messages.error(request, 'You do not have permission to view that page.')
         return redirect('accounts:dashboard')
-    return render(request, 'accounts/dashboard_reviewer.html')
+
+    from reviews.models import Review
+    from conference.models import Conference
+    from django.utils import timezone
+
+    reviews = Review.objects.filter(reviewer=request.user).exclude(
+        status=Review.STATUS_RECUSED
+    )
+    completed = reviews.filter(status=Review.STATUS_COMPLETED).count()
+    pending = reviews.exclude(status=Review.STATUS_COMPLETED).count()
+
+    # Days until next review deadline
+    next_deadline = None
+    days_left = '—'
+    confs = Conference.objects.filter(
+        review_deadline__gte=timezone.now(),
+        submissions__reviews__reviewer=request.user,
+    ).distinct().order_by('review_deadline')
+    if confs.exists():
+        next_deadline = confs.first().review_deadline
+        days_left = (next_deadline.date() - timezone.localdate()).days
+
+    return render(request, 'accounts/dashboard_reviewer.html', {
+        'reviews': reviews.select_related('submission', 'submission__track')[:5],
+        'assigned_total': reviews.count(),
+        'completed_count': completed,
+        'pending_count': pending,
+        'days_left': days_left,
+        'next_deadline': next_deadline,
+    })
 
 
 @login_required
