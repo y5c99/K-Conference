@@ -1,0 +1,177 @@
+{% extends 'app_base.html' %}
+
+{% block title %}Reports — {{ conference.name }}{% endblock %}
+{% block topbar_title %}Reports{% endblock %}
+
+{% block sidebar_nav %}
+    {% include 'partials/sidebar_organiser.html' with active='reports' active_conference_pk=conference.pk %}
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'conference:detail' conference.pk %}" class="back-link">← Back to Conference</a>
+
+<section class="page-head" style="margin-top: 0.5rem;">
+    <div>
+        <h1>Reports</h1>
+        <p class="muted">{{ conference.name }} — analytics and CSV exports</p>
+    </div>
+</section>
+
+{# ---------- Registrations ---------- #}
+<section class="panel">
+    <div class="panel-head">
+        <h3>📅 Registrations</h3>
+        <a href="{% url 'core:export_csv' conference.pk 'participants' %}" class="btn-secondary">↓ Export CSV</a>
+    </div>
+
+    <div class="stat-grid">
+        <div class="stat"><div class="stat-label">Total</div><div class="stat-value">{{ reg.total }}</div></div>
+        <div class="stat"><div class="stat-label">Confirmed</div><div class="stat-value">{{ reg.confirmed }}</div></div>
+        <div class="stat"><div class="stat-label">Waitlist</div><div class="stat-value">{{ reg.waitlist }}</div></div>
+        {% if reg.capacity %}
+        <div class="stat">
+            <div class="stat-label">Capacity used</div>
+            <div class="stat-value">{{ reg.capacity_pct }}%</div>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if reg.capacity %}
+        <div class="capacity-bar" title="{{ reg.confirmed }} of {{ reg.capacity }}">
+            <div class="capacity-fill" style="width: {{ reg.capacity_pct }}%;"></div>
+        </div>
+    {% endif %}
+
+    <h4 class="report-subhead">Registrations over the last 30 days</h4>
+    <div class="bar-chart">
+        {% for s in reg.series %}
+            <div class="bar-col" title="{{ s.date|date:'M j' }}: {{ s.count }} registration{{ s.count|pluralize }}">
+                <div class="bar" style="height: {{ s.percent }}%;"></div>
+                <span class="bar-label">{% if forloop.counter|divisibleby:5 %}{{ s.date|date:"M j" }}{% endif %}</span>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+{# ---------- Submissions ---------- #}
+<section class="panel">
+    <div class="panel-head">
+        <h3>📄 Submissions</h3>
+        <a href="{% url 'core:export_csv' conference.pk 'submissions' %}" class="btn-secondary">↓ Export CSV</a>
+    </div>
+
+    <div class="stat-grid">
+        <div class="stat"><div class="stat-label">Total</div><div class="stat-value">{{ sub.total }}</div></div>
+        <div class="stat"><div class="stat-label">Accepted</div><div class="stat-value">{{ sub.by_status.accepted }}</div></div>
+        <div class="stat"><div class="stat-label">Rejected</div><div class="stat-value">{{ sub.by_status.rejected }}</div></div>
+        <div class="stat">
+            <div class="stat-label">Acceptance rate</div>
+            <div class="stat-value">
+                {% if sub.acceptance_rate is not None %}{{ sub.acceptance_rate }}%{% else %}—{% endif %}
+            </div>
+        </div>
+    </div>
+
+    {% if sub.status_chart %}
+    <h4 class="report-subhead">Status breakdown</h4>
+    <div class="hbar-chart">
+        {% for row in sub.status_chart %}
+        <div class="hbar-row">
+            <span class="hbar-label">{{ row.label }}</span>
+            <div class="hbar-track">
+                <div class="hbar-fill status-{{ row.key }}" style="width: {{ row.percent }}%;"></div>
+            </div>
+            <span class="hbar-value">{{ row.count }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if sub.by_track %}
+    <h4 class="report-subhead">By track</h4>
+    <table class="data-table">
+        <thead>
+            <tr><th>Track</th><th>Total</th><th>Accepted</th><th>Rejected</th><th>Acceptance rate</th></tr>
+        </thead>
+        <tbody>
+        {% for t in sub.by_track %}
+            <tr>
+                <td>{{ t.name }}</td>
+                <td>{{ t.total }}</td>
+                <td>{{ t.accepted }}</td>
+                <td>{{ t.rejected }}</td>
+                <td>{% if t.acceptance_rate is not None %}{{ t.acceptance_rate }}%{% else %}—{% endif %}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
+</section>
+
+{# ---------- Reviews ---------- #}
+<section class="panel">
+    <div class="panel-head">
+        <h3>🔍 Reviews</h3>
+        <a href="{% url 'core:export_csv' conference.pk 'reviews' %}" class="btn-secondary">↓ Export CSV</a>
+    </div>
+
+    <div class="stat-grid">
+        <div class="stat"><div class="stat-label">Assignments</div><div class="stat-value">{{ rev.total }}</div></div>
+        <div class="stat"><div class="stat-label">Completed</div><div class="stat-value">{{ rev.completed }}</div></div>
+        <div class="stat"><div class="stat-label">Pending</div><div class="stat-value">{{ rev.pending }}</div></div>
+        <div class="stat"><div class="stat-label">Recused</div><div class="stat-value">{{ rev.recused }}</div></div>
+    </div>
+
+    <h4 class="report-subhead">Completion progress</h4>
+    <div class="capacity-bar" title="{{ rev.completed }} of {{ rev.total }} reviews complete">
+        <div class="capacity-fill" style="width: {{ rev.completion_pct }}%;"></div>
+    </div>
+    <p class="muted small" style="margin-top: 0.5rem;">{{ rev.completion_pct }}% of reviews complete</p>
+
+    {% if rev.rec_chart %}
+    <h4 class="report-subhead">Recommendation distribution</h4>
+    <div class="hbar-chart">
+        {% for row in rev.rec_chart %}
+        <div class="hbar-row">
+            <span class="hbar-label">{{ row.label }}</span>
+            <div class="hbar-track">
+                <div class="hbar-fill rec-fill" style="width: {{ row.percent }}%;"></div>
+            </div>
+            <span class="hbar-value">{{ row.count }}</span>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</section>
+
+{# ---------- Score distribution ---------- #}
+<section class="panel">
+    <div class="panel-head">
+        <h3>⭐ Score Distribution</h3>
+    </div>
+    {% if score.has_data %}
+        <p class="muted small">
+            Across {{ score.total }} criterion-scores from completed reviews. Overall mean: <strong>{{ score.avg }}</strong>.
+        </p>
+        <div class="bar-chart bar-chart-scores">
+            {% for b in score.bars %}
+            <div class="bar-col" title="Score {{ b.value }}: {{ b.count }} given">
+                <div class="bar" style="height: {{ b.percent }}%;"></div>
+                <span class="bar-label">{{ b.value }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="muted small">No completed reviews yet — no scores to chart.</p>
+    {% endif %}
+</section>
+
+{# ---------- Decisions export ---------- #}
+<section class="panel">
+    <div class="panel-head">
+        <h3>⚖ Decisions</h3>
+        <a href="{% url 'core:export_csv' conference.pk 'decisions' %}" class="btn-secondary">↓ Export CSV</a>
+    </div>
+    <p class="muted small">A compact decision list (accept/reject/under_review) suitable for sharing with the programme committee.</p>
+</section>
+{% endblock %}

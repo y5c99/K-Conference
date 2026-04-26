@@ -1,0 +1,51 @@
+{% extends 'app_base.html' %}
+
+{% block title %}Audit Log — {{ conference.name }}{% endblock %}
+{% block topbar_title %}Audit Log{% endblock %}
+
+{% block sidebar_nav %}
+    {% include 'partials/sidebar_organiser.html' with active='audit' active_conference_pk=conference.pk %}
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'conference:detail' conference.pk %}" class="back-link">← Back to Conference</a>
+
+<section class="page-head" style="margin-top: 0.5rem;">
+    <div>
+        <h1>Audit Log</h1>
+        <p class="muted">{{ conference.name }} — {{ logs.count }} entr{{ logs.count|pluralize:"y,ies" }}</p>
+    </div>
+</section>
+
+{% if logs %}
+    <table class="data-table panel">
+        <thead>
+            <tr>
+                <th>When</th>
+                <th>Action</th>
+                <th>Actor</th>
+                <th>Target</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for log in logs %}
+            <tr>
+                <td class="muted small" style="white-space: nowrap;">
+                    {{ log.created_at|date:"M j, Y H:i" }}
+                </td>
+                <td><span class="audit-action audit-{{ log.action }}">{{ log.get_action_display }}</span></td>
+                <td>{{ log.actor.get_full_name|default:log.actor.username|default:"—" }}</td>
+                <td>{{ log.target|default:"—" }}</td>
+                <td class="muted small">{{ log.notes|default:"—" }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% else %}
+    <div class="empty-card">
+        <h2>No audit entries yet</h2>
+        <p>The audit log records significant organiser actions like decisions and overrides.</p>
+    </div>
+{% endif %}
+{% endblock %}

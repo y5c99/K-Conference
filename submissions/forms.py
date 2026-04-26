@@ -59,3 +59,28 @@ class SubmissionFileForm(forms.Form):
         help_text='PDF, DOC, or DOCX — max 25 MB.',
         validators=[validate_manuscript_file],
     )
+class DecisionForm(forms.Form):
+    """Organiser's accept/reject decision."""
+
+    DECISION_ACCEPT = 'accepted'
+    DECISION_REJECT = 'rejected'
+    DECISION_REVIEW = 'under_review'  # send back to review
+
+    DECISION_CHOICES = [
+        (DECISION_ACCEPT, 'Accept'),
+        (DECISION_REJECT, 'Reject'),
+        (DECISION_REVIEW, 'Keep Under Review'),
+    ]
+
+    decision = forms.ChoiceField(
+        choices=DECISION_CHOICES,
+        widget=forms.RadioSelect,
+    )
+    notes = forms.CharField(
+        widget=forms.Textarea(attrs={
+            'rows': 3,
+            'placeholder': 'Optional notes for internal records or to share with author.',
+        }),
+        required=False,
+        label='Decision notes',
+    )

@@ -1000,3 +1000,199 @@ p  { margin-bottom: 0.75rem; }
     padding: 0.4rem 0;
     color: var(--text);
 }
+
+/* =========================================================
+   PHASE 6 — Organiser Tools
+   ========================================================= */
+
+/* Pin badge on announcements */
+.pin-badge {
+    display: inline-block;
+    background: var(--primary-light);
+    color: var(--primary);
+    padding: 2px 8px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-right: 0.5rem;
+}
+
+/* FAQ accordion */
+.faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.faq-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0;
+    overflow: hidden;
+    transition: border-color 0.15s ease;
+}
+.faq-item[open] {
+    border-color: var(--primary);
+}
+.faq-item.unpublished {
+    opacity: 0.65;
+    border-style: dashed;
+}
+.faq-item summary {
+    padding: 1rem 1.25rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    list-style: none;
+    transition: background 0.15s ease;
+}
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::after {
+    content: '+';
+    color: var(--primary);
+    font-size: 1.4rem;
+    font-weight: 300;
+}
+.faq-item[open] summary::after { content: '−'; }
+.faq-item summary:hover { background: var(--bg); }
+.faq-answer {
+    padding: 0 1.25rem 1rem;
+    color: #4b5563;
+}
+
+/* Audit log action badges */
+.audit-action {
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    background: var(--bg);
+    color: var(--text-light);
+}
+.audit-deadline_override   { background: #fef3c7; color: #92400e; }
+.audit-decision_made       { background: #dcfce7; color: #15803d; }
+.audit-decision_override   { background: #fee2e2; color: #b91c1c; }
+.audit-status_change       { background: #dbeafe; color: #1d4ed8; }
+.audit-review_reopen       { background: #fef3c7; color: #92400e; }
+.audit-submission_unlock   { background: #fef3c7; color: #92400e; }
+.audit-other               { background: #f3f4f6; color: #6b7280; }
+
+
+
+/* =========================================================
+   PHASE 7 — Reports / charts
+   ========================================================= */
+
+.report-subhead {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 1.5rem 0 0.75rem;
+}
+
+/* Capacity bar (used for capacity + review completion) */
+.capacity-bar {
+    height: 10px;
+    background: var(--border);
+    border-radius: 5px;
+    overflow: hidden;
+}
+.capacity-fill {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 5px;
+    transition: width 0.3s ease;
+}
+
+/* Vertical bar chart (registrations over time, score histogram) */
+.bar-chart {
+    display: grid;
+    grid-template-columns: repeat(30, 1fr);
+    gap: 3px;
+    align-items: end;
+    height: 160px;
+    padding: 0.5rem 0 1.5rem;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+}
+.bar-chart-scores {
+    grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+    gap: 1rem;
+}
+
+.bar-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 100%;
+    justify-content: flex-end;
+    position: relative;
+}
+.bar {
+    width: 100%;
+    background: var(--primary);
+    border-radius: 3px 3px 0 0;
+    min-height: 2px;
+    transition: height 0.3s ease;
+}
+.bar:hover {
+    background: var(--primary-dark);
+}
+.bar-label {
+    position: absolute;
+    bottom: -1.25rem;
+    font-size: 0.7rem;
+    color: var(--text-light);
+    white-space: nowrap;
+}
+
+/* Horizontal bar chart (status breakdown, recommendations) */
+.hbar-chart {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.hbar-row {
+    display: grid;
+    grid-template-columns: 140px 1fr 50px;
+    gap: 0.75rem;
+    align-items: center;
+    font-size: 0.9rem;
+}
+.hbar-label { color: var(--text); font-weight: 500; }
+.hbar-track {
+    height: 10px;
+    background: var(--border);
+    border-radius: 5px;
+    overflow: hidden;
+}
+.hbar-fill {
+    height: 100%;
+    background: var(--primary);
+    border-radius: 5px;
+    transition: width 0.3s ease;
+}
+.hbar-fill.rec-fill { background: #7376EF; }
+
+/* Status-coloured horizontal bars (matching status pills) */
+.hbar-fill.status-draft        { background: #9ca3af; }
+.hbar-fill.status-submitted    { background: #3b82f6; }
+.hbar-fill.status-under_review { background: #f59e0b; }
+.hbar-fill.status-accepted     { background: #16a34a; }
+.hbar-fill.status-rejected     { background: #dc2626; }
+.hbar-fill.status-withdrawn    { background: #6b7280; }
+
+.hbar-value {
+    font-weight: 600;
+    color: var(--text);
+    text-align: right;
+}
+
+/* Mobile */
+@media (max-width: 700px) {
+    .hbar-row { grid-template-columns: 100px 1fr 40px; font-size: 0.85rem; }
+    .bar-chart { grid-template-columns: repeat(15, 1fr); }
+}

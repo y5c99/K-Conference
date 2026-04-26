@@ -1,0 +1,32 @@
+{% extends 'app_base.html' %}
+
+{% block title %}{% if mode == 'edit' %}Edit{% else %}New{% endif %} Announcement{% endblock %}
+{% block topbar_title %}Announcement{% endblock %}
+
+{% block sidebar_nav %}
+    {% include 'partials/sidebar_organiser.html' with active='announcements' active_conference_pk=conference.pk %}
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'core:announcement_list' conference.pk %}" class="back-link">← Back to Announcements</a>
+
+<section class="page-head" style="margin-top: 0.5rem;">
+    <h1>{% if mode == 'edit' %}Edit{% else %}New{% endif %} Announcement</h1>
+</section>
+
+<form method="post" class="big-form panel">
+    {% csrf_token %}
+    {% for field in form %}
+        <div class="form-row">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.help_text %}<small class="muted">{{ field.help_text }}</small>{% endif %}
+            {% if field.errors %}<div class="field-error">{{ field.errors.0 }}</div>{% endif %}
+        </div>
+    {% endfor %}
+    <div class="form-actions">
+        <a href="{% url 'core:announcement_list' conference.pk %}" class="btn-secondary">Cancel</a>
+        <button type="submit" class="btn-primary inline">Save</button>
+    </div>
+</form>
+{% endblock %}

@@ -37,4 +37,19 @@
         <p class="muted small">You haven't registered for any conferences yet. <a href="{% url 'conference:list' %}">Browse conferences</a>.</p>
     {% endif %}
 </section>
+<section class="panel">
+    <div class="panel-head"><h3>Announcements</h3></div>
+    {% if announcements %}
+        {% for a in announcements %}
+        <div class="announcement-item">
+            {% if a.is_pinned %}<span class="pin-badge">📌 Pinned</span>{% endif %}
+            <strong>{{ a.title }}</strong>
+            <p class="muted small">{{ a.body|truncatechars:140 }}</p>
+            <span class="muted small">{{ a.created_at|date:"M j, Y" }}</span>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p class="muted small">No announcements yet.</p>
+    {% endif %}
+</section>
 {% endblock %}

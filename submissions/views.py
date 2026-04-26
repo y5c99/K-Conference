@@ -316,3 +316,126 @@ def organiser_submission_list(request, conference_pk):
         'status_filter': status_filter,
         'status_choices': Submission.STATUS_CHOICES,
     })
+# ---------- Organiser: decisions dashboard + per-paper decision ----------
+
+@login_required
+def decisions_dashboard(request, conference_pk):
+    """
+    Bulk view: all submissions with their average review score
+    and current status. From here, click any row to make a decision.
+    """
+    from conference.models import Conference
+
+    conference = get_object_or_404(Conference, pk=conference_pk)
+    if request.user != conference.organiser and not request.user.is_staff:
+        return HttpResponseForbidden()
+
+    submissions = conference.submissions.select_related(
+        'author', 'track'
+    ).prefetch_related('reviews__scores__criterion')
+
+    # Annotate each submission with stats
+    rows = []
+    for s in submissions:
+        completed_reviews = [r for r in s.reviews.all() if r.is_completed]
+        avg = None
+        if completed_reviews:
+            scores = [r.average_score for r in completed_reviews if r.average_score]
+            if scores:
+                avg = round(sum(scores) / len(scores), 2)
+
+        rows.append({
+            'submission': s,
+            'reviews_total': s.reviews.count(),
+            'reviews_completed': len(completed_reviews),
+            'average_score': avg,
+        })
+
+    # Counts for the stats row
+    counts = {
+        'total': submissions.count(),
+        'submitted': submissions.filter(
+            status=Submission.STATUS_SUBMITTED).count(),
+        'under_review': submissions.filter(
+            status=Submission.STATUS_UNDER_REVIEW).count(),
+        'accepted': submissions.filter(
+            status=Submission.STATUS_ACCEPTED).count(),
+        'rejected': submissions.filter(
+            status=Submission.STATUS_REJECTED).count(),
+    }
+
+    return render(request, 'submissions/decisions_dashboard.html', {
+        'conference': conference,
+        'rows': rows,
+        'counts': counts,
+    })
+
+
+@login_required
+def make_decision(request, pk):
+    """The organiser's decision page for a single submission."""
+    from .forms import DecisionForm
+    from core.models import AuditLog
+
+    submission = get_object_or_404(Submission, pk=pk)
+    if request.user != submission.conference.organiser and not request.user.is_staff:
+        return HttpResponseForbidden()
+
+    completed_reviews = submission.reviews.filter(
+        status='completed',
+    ).select_related('reviewer').prefetch_related('scores__criterion')
+
+    if request.method == 'POST':
+        form = DecisionForm(request.POST)
+        if form.is_valid():
+            new_status = form.cleaned_data['decision']
+            notes = form.cleaned_data['notes']
+
+            # Track if this is overriding an earlier decision
+            is_override = submission.status in (
+                Submission.STATUS_ACCEPTED, Submission.STATUS_REJECTED
+            )
+
+            old_status = submission.status
+            submission.status = new_status
+            submission.decision_at = timezone.now()
+            submission.decision_notes = notes
+            submission.save(update_fields=['status', 'decision_at', 'decision_notes'])
+
+            # Audit log
+            AuditLog.log(
+                conference=submission.conference,
+                actor=request.user,
+                action=(AuditLog.ACTION_DECISION_OVERRIDE if is_override
+                        else AuditLog.ACTION_DECISION_MADE),
+                target=f'Submission {submission.submission_id_code or submission.pk}',
+                notes=f'{old_status} → {new_status}'
+                      + (f' | {notes}' if notes else ''),
+            )
+
+            messages.success(request,
+                f'Decision recorded: {submission.get_status_display()}')
+            return redirect('submissions:decisions_dashboard',
+                            conference_pk=submission.conference.pk)
+    else:
+        # Pre-select current status if it's already a decision
+        initial = {}
+        if submission.status in ('accepted', 'rejected', 'under_review'):
+            initial['decision'] = submission.status
+        if submission.decision_notes:
+            initial['notes'] = submission.decision_notes
+        form = DecisionForm(initial=initial)
+
+    # Compute summary score
+    avg_score = None
+    if completed_reviews.exists():
+        scores = [r.average_score for r in completed_reviews if r.average_score]
+        if scores:
+            avg_score = round(sum(scores) / len(scores), 2)
+
+    return render(request, 'submissions/make_decision.html', {
+        'submission': submission,
+        'reviews': completed_reviews,
+        'avg_score': avg_score,
+        'form': form,
+    })

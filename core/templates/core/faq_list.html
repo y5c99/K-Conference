@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}FAQ — {{ conference.name }}{% endblock %}
+
+{% block content %}
+<section class="page-head">
+    <div>
+        <h1>Frequently Asked Questions</h1>
+        <p class="muted">{{ conference.name }}</p>
+    </div>
+    {% if is_organiser %}
+        <a href="{% url 'core:faq_create' conference.pk %}" class="btn-primary inline">＋ New FAQ</a>
+    {% endif %}
+</section>
+
+{% if faqs %}
+    <div class="faq-list">
+    {% for faq in faqs %}
+        <details class="faq-item {% if not faq.is_published %}unpublished{% endif %}">
+            <summary>
+                {{ faq.question }}
+                {% if not faq.is_published %}<span class="badge badge-draft">Draft</span>{% endif %}
+            </summary>
+            <div class="faq-answer">
+                {{ faq.answer|linebreaksbr }}
+                {% if is_organiser %}
+                    <div style="margin-top: 0.75rem;">
+                        <a href="{% url 'core:faq_edit' faq.pk %}" class="link-mini">Edit</a>
+                        &middot;
+                        <a href="{% url 'core:faq_delete' faq.pk %}" class="link-mini danger">Delete</a>
+                    </div>
+                {% endif %}
+            </div>
+        </details>
+    {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-card">
+        <h2>No FAQs yet</h2>
+        <p>{% if is_organiser %}Click "＋ New FAQ" to add the first one.{% else %}Check back later.{% endif %}</p>
+    </div>
+{% endif %}
+
+<p style="margin-top: 1rem;"><a href="{% url 'conference:detail' conference.pk %}" class="back-link">← Back to {{ conference.name }}</a></p>
+{% endblock %}

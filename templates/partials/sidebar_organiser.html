@@ -7,6 +7,23 @@
 <a href="{% url 'conference:create' %}" class="side-link {% if active == 'new_conference' %}active{% endif %}">
     <span class="side-icon">＋</span> New Conference
 </a>
+{% if active_conference_pk %}
+    <a href="{% url 'submissions:decisions_dashboard' active_conference_pk %}" class="side-link {% if active == 'decisions' %}active{% endif %}">
+        <span class="side-icon">⚖</span> Decisions
+    </a>
+    <a href="{% url 'core:reports' active_conference_pk %}" class="side-link {% if active == 'reports' %}active{% endif %}">
+        <span class="side-icon">📊</span> Reports
+    </a>
+    <a href="{% url 'core:announcement_list' active_conference_pk %}" class="side-link {% if active == 'announcements' %}active{% endif %}">
+        <span class="side-icon">📢</span> Announcements
+    </a>
+    <a href="{% url 'core:faq_list' active_conference_pk %}" class="side-link {% if active == 'faq' %}active{% endif %}">
+        <span class="side-icon">❓</span> FAQ
+    </a>
+    <a href="{% url 'core:audit_log' active_conference_pk %}" class="side-link {% if active == 'audit' %}active{% endif %}">
+        <span class="side-icon">📋</span> Audit Log
+    </a>
+{% endif %}
 <a href="{% url 'accounts:logout' %}" class="side-link logout">
     <span class="side-icon">⎋</span> Logout
 </a>

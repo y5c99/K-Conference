@@ -15,6 +15,9 @@
         <h1>Submissions</h1>
         <p class="muted">{{ conference.name }} — {{ submissions.count }} paper{{ submissions.count|pluralize }}</p>
     </div>
+    <div class="page-actions">
+        <a href="{% url 'submissions:decisions_dashboard' conference.pk %}" class="btn-primary inline">⚖ Decisions</a>
+    </div>
 </section>
 
 <form method="get" class="filter-bar">

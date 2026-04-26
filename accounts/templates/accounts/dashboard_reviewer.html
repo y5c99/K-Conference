@@ -59,12 +59,22 @@
         {% endif %}
     </div>
 
-    <div class="panel">
+   <div class="panel">
         <div class="panel-head">
             <h3>Announcements</h3>
-            <a href="#" class="link-mini">View All</a>
         </div>
-        <p class="muted small">Conference announcements will appear here in Phase 6.</p>
+        {% if announcements %}
+            {% for a in announcements %}
+            <div class="announcement-item">
+                {% if a.is_pinned %}<span class="pin-badge">📌 Pinned</span>{% endif %}
+                <strong>{{ a.title }}</strong>
+                <p class="muted small">{{ a.body|truncatechars:140 }}</p>
+                <span class="muted small">{{ a.created_at|date:"M j, Y" }}</span>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="muted small">No announcements yet.</p>
+        {% endif %}
     </div>
 </section>
 

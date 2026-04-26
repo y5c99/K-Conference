@@ -1,0 +1,49 @@
+{% extends 'app_base.html' %}
+
+{% block title %}Announcements — {{ conference.name }}{% endblock %}
+{% block topbar_title %}Announcements{% endblock %}
+
+{% block sidebar_nav %}
+    {% include 'partials/sidebar_organiser.html' with active='announcements' active_conference_pk=conference.pk %}
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'conference:detail' conference.pk %}" class="back-link">← Back to Conference</a>
+
+<section class="page-head" style="margin-top: 0.5rem;">
+    <div>
+        <h1>Announcements</h1>
+        <p class="muted">{{ conference.name }}</p>
+    </div>
+    <a href="{% url 'core:announcement_create' conference.pk %}" class="btn-primary inline">＋ New Announcement</a>
+</section>
+
+{% if announcements %}
+    <div class="submission-list">
+    {% for a in announcements %}
+        <div class="submission-card">
+            <div class="submission-card-main">
+                <h3>
+                    {% if a.is_pinned %}<span class="pin-badge">📌 Pinned</span>{% endif %}
+                    {{ a.title }}
+                </h3>
+                <p>{{ a.body|truncatechars:200 }}</p>
+                <p class="muted small">
+                    Audience: {{ a.get_audience_display }} &middot;
+                    {{ a.created_at|date:"F j, Y H:i" }}
+                </p>
+            </div>
+            <div style="display: flex; gap: 0.5rem; align-items: flex-start;">
+                <a href="{% url 'core:announcement_edit' a.pk %}" class="btn-secondary">Edit</a>
+                <a href="{% url 'core:announcement_delete' a.pk %}" class="btn-danger">Delete</a>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+{% else %}
+    <div class="empty-card">
+        <h2>No announcements yet</h2>
+        <p>Click "＋ New Announcement" to broadcast your first message.</p>
+    </div>
+{% endif %}
+{% endblock %}

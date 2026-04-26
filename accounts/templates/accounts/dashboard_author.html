@@ -65,16 +65,22 @@
         {% endif %}
     </div>
 
-    <div class="panel">
+   <div class="panel">
         <div class="panel-head">
             <h3>Announcements</h3>
-            <a href="#" class="link-mini">View All</a>
         </div>
-        <div class="announcement-item">
-            <strong>Welcome to ISCE 2026</strong>
-            <p class="muted small">We're excited to welcome all participants to the International Society Conference Event 2026.</p>
-            <span class="muted small">Mar 19, 2026</span>
-        </div>
+        {% if announcements %}
+            {% for a in announcements %}
+            <div class="announcement-item">
+                {% if a.is_pinned %}<span class="pin-badge">📌 Pinned</span>{% endif %}
+                <strong>{{ a.title }}</strong>
+                <p class="muted small">{{ a.body|truncatechars:140 }}</p>
+                <span class="muted small">{{ a.created_at|date:"M j, Y" }}</span>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p class="muted small">No announcements yet.</p>
+        {% endif %}
     </div>
 </section>
 {% endblock %}

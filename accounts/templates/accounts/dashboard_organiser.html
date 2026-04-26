@@ -66,12 +66,27 @@
         {% endif %}
     </div>
 
-    <div class="panel">
+   <div class="panel">
         <div class="panel-head">
             <h3>Announcements</h3>
-            <a href="#" class="link-mini">View All</a>
+            {% if active_conference %}
+                <a href="{% url 'core:announcement_list' active_conference.pk %}" class="link-mini">Manage</a>
+            {% endif %}
         </div>
-        <p class="muted small">Announcements will appear here in Phase 6.</p>
+        {% if active_conference %}
+            {% for a in active_conference.announcements.all|slice:":3" %}
+            <div class="announcement-item">
+                {% if a.is_pinned %}<span class="pin-badge">📌 Pinned</span>{% endif %}
+                <strong>{{ a.title }}</strong>
+                <p class="muted small">{{ a.body|truncatechars:120 }}</p>
+                <span class="muted small">{{ a.created_at|date:"M j, Y" }}</span>
+            </div>
+            {% empty %}
+                <p class="muted small">No announcements yet. <a href="{% url 'core:announcement_create' active_conference.pk %}">Create one</a>.</p>
+            {% endfor %}
+        {% else %}
+            <p class="muted small">Create a conference first.</p>
+        {% endif %}
     </div>
 </section>
 {% endblock %}

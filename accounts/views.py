@@ -159,17 +159,29 @@ def dashboard_organiser(request):
         return redirect('accounts:dashboard')
 
     from conference.models import Conference
+    from submissions.models import Submission
+
     conferences = Conference.objects.filter(organiser=request.user)
     active_conference = conferences.filter(
         status=Conference.STATUS_OPEN
     ).order_by('start_date').first() or conferences.first()
 
+    submissions_count = 0
+    reviews_count = 0
+    if active_conference:
+        submissions_count = active_conference.submissions.count()
+        reviews_count = sum(s.reviews.count() for s in active_conference.submissions.all())
+
     return render(request, 'accounts/dashboard_organiser.html', {
         'conferences': conferences,
         'active_conference': active_conference,
+        'active_conference_pk': active_conference.pk if active_conference else None,
         'conferences_count': conferences.count(),
         'participants_count': sum(c.participants_count for c in conferences),
+        'submissions_count': submissions_count,
+        'reviews_count': reviews_count,
     })
+
 
 @login_required
 def dashboard_author(request):
@@ -179,12 +191,19 @@ def dashboard_author(request):
 
     from conference.models import Conference
     from submissions.models import Submission
+    from core.models import Announcement
 
     active_conference = Conference.objects.filter(
         status=Conference.STATUS_OPEN
     ).order_by('start_date').first()
 
     submissions = Submission.objects.filter(author=request.user)
+
+    announcements = []
+    if active_conference:
+        announcements = active_conference.announcements.filter(
+            audience__in=[Announcement.AUDIENCE_ALL, Announcement.AUDIENCE_AUTHORS]
+        )[:5]
 
     return render(request, 'accounts/dashboard_author.html', {
         'active_conference': active_conference,
@@ -198,6 +217,7 @@ def dashboard_author(request):
         'submissions_rejected': submissions.filter(
             status=Submission.STATUS_REJECTED).count(),
         'recent_submissions': submissions.order_by('-updated_at')[:5],
+        'announcements': announcements,
     })
 
 
@@ -209,6 +229,7 @@ def dashboard_reviewer(request):
 
     from reviews.models import Review
     from conference.models import Conference
+    from core.models import Announcement
     from django.utils import timezone
 
     reviews = Review.objects.filter(reviewer=request.user).exclude(
@@ -217,7 +238,6 @@ def dashboard_reviewer(request):
     completed = reviews.filter(status=Review.STATUS_COMPLETED).count()
     pending = reviews.exclude(status=Review.STATUS_COMPLETED).count()
 
-    # Days until next review deadline
     next_deadline = None
     days_left = '—'
     confs = Conference.objects.filter(
@@ -228,6 +248,15 @@ def dashboard_reviewer(request):
         next_deadline = confs.first().review_deadline
         days_left = (next_deadline.date() - timezone.localdate()).days
 
+    # Pull announcements from any conference this reviewer is involved in
+    relevant_conf_ids = reviews.values_list(
+        'submission__conference_id', flat=True
+    ).distinct()
+    announcements = Announcement.objects.filter(
+        conference_id__in=relevant_conf_ids,
+        audience__in=[Announcement.AUDIENCE_ALL, Announcement.AUDIENCE_REVIEWERS],
+    )[:5]
+
     return render(request, 'accounts/dashboard_reviewer.html', {
         'reviews': reviews.select_related('submission', 'submission__track')[:5],
         'assigned_total': reviews.count(),
@@ -235,6 +264,7 @@ def dashboard_reviewer(request):
         'pending_count': pending,
         'days_left': days_left,
         'next_deadline': next_deadline,
+        'announcements': announcements,
     })
 
 
@@ -245,6 +275,7 @@ def dashboard_participant(request):
         return redirect('accounts:dashboard')
 
     from conference.models import Registration
+    from core.models import Announcement
     from django.utils import timezone
 
     registrations = Registration.objects.filter(user=request.user)
@@ -252,7 +283,15 @@ def dashboard_participant(request):
         conference__start_date__gte=timezone.localdate()
     ).count()
 
+    # Announcements from conferences the participant is registered for
+    conf_ids = registrations.values_list('conference_id', flat=True)
+    announcements = Announcement.objects.filter(
+        conference_id__in=conf_ids,
+        audience__in=[Announcement.AUDIENCE_ALL, Announcement.AUDIENCE_PARTICIPANTS],
+    )[:5]
+
     return render(request, 'accounts/dashboard_participant.html', {
         'registrations': registrations,
         'upcoming_count': upcoming_count,
+        'announcements': announcements,
     })

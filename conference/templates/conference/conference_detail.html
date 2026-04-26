@@ -97,4 +97,11 @@
         <p>Please <a href="{% url 'accounts:login' %}">log in</a> to register.</p>
     {% endif %}
 </section>
+<section class="panel">
+    <div class="panel-head">
+        <h3>Information</h3>
+    </div>
+    <a href="{% url 'core:faq_list' conference.pk %}" class="btn-secondary inline">View FAQ</a>
+    <a href="{% url 'core:announcement_list' conference.pk %}" class="btn-secondary inline" style="display:{% if user == conference.organiser %}inline-block{% else %}none{% endif %};">Manage Announcements</a>
+</section>
 {% endblock %}

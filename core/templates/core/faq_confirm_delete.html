@@ -1,0 +1,18 @@
+{% extends 'app_base.html' %}
+{% block topbar_title %}Delete FAQ{% endblock %}
+
+{% block sidebar_nav %}
+    {% include 'partials/sidebar_organiser.html' with active='faq' active_conference_pk=faq.conference.pk %}
+{% endblock %}
+
+{% block content %}
+<section class="panel">
+    <h1>Delete FAQ?</h1>
+    <p><strong>{{ faq.question }}</strong></p>
+    <form method="post">
+        {% csrf_token %}
+        <button class="btn-danger" type="submit">Yes, delete</button>
+        <a href="{% url 'core:faq_list' faq.conference.pk %}" class="btn-secondary">Cancel</a>
+    </form>
+</section>
+{% endblock %}

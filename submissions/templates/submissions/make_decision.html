@@ -1,0 +1,89 @@
+{% extends 'app_base.html' %}
+
+{% block title %}Decision — {{ submission.title }}{% endblock %}
+{% block topbar_title %}Make Decision{% endblock %}
+
+{% block sidebar_nav %}
+    {% include 'partials/sidebar_organiser.html' with active='decisions' active_conference_pk=submission.conference.pk %}
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'submissions:decisions_dashboard' submission.conference.pk %}" class="back-link">← Back to Decisions</a>
+
+<section class="page-head" style="margin-top: 0.5rem;">
+    <div>
+        <h1>{{ submission.title }}</h1>
+        <p class="muted">{{ submission.submission_id_code|default:"—" }} &middot;
+                          {{ submission.author.get_full_name|default:submission.author.username }} &middot;
+                          {{ submission.track.name|default:"—" }}</p>
+    </div>
+    <span class="status-pill status-{{ submission.status }} large">{{ submission.get_status_display }}</span>
+</section>
+
+<section class="panel">
+    <h3>Abstract</h3>
+    <p>{{ submission.abstract|linebreaksbr }}</p>
+</section>
+
+<section class="panel">
+    <h3>Review Summary</h3>
+    {% if reviews %}
+        <p><strong>{{ reviews.count }}</strong> completed review{{ reviews.count|pluralize }}
+           {% if avg_score %}&middot; Average score: <strong>{{ avg_score }}</strong>{% endif %}
+        </p>
+
+        <ul class="list">
+        {% for r in reviews %}
+            <li>
+                <div style="flex: 1;">
+                    <strong>{{ r.reviewer.get_full_name|default:r.reviewer.username }}</strong>
+                    {% if r.recommendation %}
+                        — <span class="status-pill status-recommendation">{{ r.get_recommendation_display }}</span>
+                    {% endif %}
+                    <br>
+                    <span class="muted small">Avg: {{ r.average_score|default:"—" }}</span>
+                </div>
+                <a href="{% url 'reviews:view_review' r.pk %}" class="btn-secondary">View Review</a>
+            </li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p class="muted small">No completed reviews yet. You can still make a decision, but consider waiting for review feedback.</p>
+    {% endif %}
+</section>
+
+<form method="post" class="big-form">
+    {% csrf_token %}
+    <section class="panel">
+        <h3>Make Decision</h3>
+
+        {% if submission.status == 'accepted' or submission.status == 'rejected' %}
+        <div class="warning-callout">
+            ⚠ This submission already has a decision ({{ submission.get_status_display }}).
+            Submitting a new decision will be logged as an override.
+        </div>
+        {% endif %}
+
+        <div class="recommendation-list">
+            {% for value, label in form.decision.field.choices %}
+                <label class="rec-option">
+                    <input type="radio" name="decision" value="{{ value }}"
+                           {% if form.decision.value == value %}checked{% endif %}>
+                    <span class="rec-label">{{ label }}</span>
+                </label>
+            {% endfor %}
+        </div>
+        {% if form.decision.errors %}<div class="field-error">{{ form.decision.errors.0 }}</div>{% endif %}
+
+        <div class="form-row" style="margin-top: 1.25rem;">
+            <label for="{{ form.notes.id_for_label }}">{{ form.notes.label }}</label>
+            {{ form.notes }}
+        </div>
+
+        <div class="form-actions">
+            <a href="{% url 'submissions:decisions_dashboard' submission.conference.pk %}" class="btn-secondary">Cancel</a>
+            <button type="submit" class="btn-primary inline">Save Decision</button>
+        </div>
+    </section>
+</form>
+{% endblock %}
