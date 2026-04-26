@@ -47,11 +47,13 @@
         {% if form.abstract.errors %}<div class="field-error">{{ form.abstract.errors.0 }}</div>{% endif %}
     </div>
 
+    {% if form.track %}
     <div class="form-row">
         <label for="{{ form.track.id_for_label }}">Track *</label>
         {{ form.track }}
         {% if form.track.errors %}<div class="field-error">{{ form.track.errors.0 }}</div>{% endif %}
     </div>
+    {% endif %}
 
     <div class="form-row">
         <label for="{{ form.keywords.id_for_label }}">Keywords</label>

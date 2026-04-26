@@ -35,11 +35,16 @@ class SubmissionForm(forms.ModelForm):
 
     def __init__(self, *args, conference=None, **kwargs):
         super().__init__(*args, **kwargs)
-        # Restrict the track dropdown to tracks of the chosen conference.
         if conference is not None:
-            self.fields['track'].queryset = conference.tracks.all()
-            self.fields['track'].empty_label = 'Select a track'
-        self.fields['track'].required = True
+            tracks = conference.tracks.all()
+            if tracks.exists():
+                # Conference has tracks — show the dropdown
+                self.fields['track'].queryset = tracks
+                self.fields['track'].empty_label = 'Select a track'
+                self.fields['track'].required = True
+            else:
+                # No tracks defined — hide the field entirely
+                self.fields.pop('track', None)
 
     def clean_abstract(self):
         abstract = self.cleaned_data.get('abstract', '').strip()

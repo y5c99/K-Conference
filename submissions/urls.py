@@ -16,7 +16,11 @@ urlpatterns = [
     # Secure file download
     path('files/<int:file_pk>/download/', views.download_file,      name='download_file'),
 
-    # Organiser view
+    # Organiser views
     path('conference/<int:conference_pk>/all/',
          views.organiser_submission_list, name='organiser_list'),
+    path('conference/<int:conference_pk>/decisions/',
+         views.decisions_dashboard, name='decisions_dashboard'),
+    path('<int:pk>/decide/',
+         views.make_decision, name='make_decision'),
 ]

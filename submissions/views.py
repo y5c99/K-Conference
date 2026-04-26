@@ -92,7 +92,7 @@ def submission_create(request):
         status=Conference.STATUS_OPEN,
         submission_deadline__gt=timezone.now(),
     )
-
+    
     if not open_conferences.exists():
         return render(request, 'submissions/no_open_conferences.html')
 
