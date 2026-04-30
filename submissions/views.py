@@ -439,3 +439,4 @@ def make_decision(request, pk):
         'avg_score': avg_score,
         'form': form,
     })
+

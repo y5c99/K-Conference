@@ -32,13 +32,13 @@
 
 {% if submissions %}
     <table class="data-table panel">
-        <thead>
+       <thead>
             <tr>
                 <th>ID</th><th>Title</th><th>Author</th><th>Track</th>
-                <th>Submitted</th><th>Status</th>
+                <th>Submitted</th><th>Status</th><th></th>
             </tr>
         </thead>
-        <tbody>
+       <tbody>
         {% for s in submissions %}
             <tr>
                 <td>{{ s.submission_id_code }}</td>
@@ -47,6 +47,9 @@
                 <td>{{ s.track.name|default:"—" }}</td>
                 <td class="muted small">{{ s.submitted_at|date:"M j, Y"|default:"—" }}</td>
                 <td><span class="status-pill status-{{ s.status }}">{{ s.get_status_display }}</span></td>
+                <td>
+                    <a href="{% url 'reviews:submission_reviews' s.pk %}" class="link-mini">Reviews</a>
+                </td>
             </tr>
         {% endfor %}
         </tbody>

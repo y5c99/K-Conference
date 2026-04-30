@@ -4,14 +4,7 @@
 <a href="{% url 'submissions:my_submissions' %}" class="side-link {% if active == 'submissions' %}active{% endif %}">
     <span class="side-icon">📄</span> My Submissions
 </a>
-<a href="#" class="side-link {% if active == 'messages' %}active{% endif %}">
-    <span class="side-icon">💬</span> Messages
-</a>
-<a href="#" class="side-link {% if active == 'schedule' %}active{% endif %}">
-    <span class="side-icon">📅</span> Schedule
-</a>
-<a href="#" class="side-link {% if active == 'feedback' %}active{% endif %}">
-    <span class="side-icon">📋</span> Feedback
+<a>
 </a>
 <a href="{% url 'accounts:logout' %}" class="side-link logout">
     <span class="side-icon">⎋</span> Logout
